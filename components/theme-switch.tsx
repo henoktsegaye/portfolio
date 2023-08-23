@@ -23,14 +23,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
     theme === "light" ? setTheme("dark") : setTheme("light");
   };
 
-  const {
-    Component,
-    slots,
-    isSelected,
-    getBaseProps,
-    getInputProps,
-    getWrapperProps,
-  } = useSwitch({
+  const { Component, slots, isSelected } = useSwitch({
     isSelected: theme === "light",
     onChange,
   });
@@ -43,48 +36,22 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
   if (!isMounted) return <div className="w-6 h-6" />;
 
   return (
-    <Component
-      {...getBaseProps({
-        className: clsx(
-          "px-px transition-opacity hover:opacity-80 cursor-pointer",
-          className,
-          classNames?.base
-        ),
-      })}
-    >
-      <div
-        {...getWrapperProps()}
-        className={slots.wrapper({
-          class: clsx(
-            [
-              "w-auto h-auto",
-              "bg-transparent",
-              "rounded-lg",
-              "flex items-center justify-center",
-              "group-data-[selected=true]:bg-transparent",
-              "!text-default-500",
-              "pt-px",
-              "px-0",
-              "mx-0",
-            ],
-            classNames?.wrapper
-          ),
-        })}
-      >
-        {isSelected ? (
-          <MoonFilledIcon
-            className="  text-default-500"
-            width="22px"
-            height="22px"
-          />
-        ) : (
-          <SunFilledIcon
-            className="  text-default-500"
-            width="22px"
-            height="22px"
-          />
-        )}
-      </div>
-    </Component>
+    <div className=" cursor-pointer ">
+      {isSelected ? (
+        <MoonFilledIcon
+          onClick={onChange}
+          className="  text-default-500"
+          width="22px"
+          height="22px"
+        />
+      ) : (
+        <SunFilledIcon
+          onClick={onChange}
+          className="  text-default-500"
+          width="22px"
+          height="22px"
+        />
+      )}
+    </div>
   );
 };
