@@ -1,3 +1,63 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+body {
+ font-basis: 150%;
+}
+.blog h1 {
+  @apply mt-8;
+  @apply mb-3;
+}
+.blog h2 {
+  @apply text-2xl;
+  @apply mb-3;
+  @apply mt-8;
+  @apply font-bold;
+}
+
+.blog h1,
+.blog h2,
+.blog h3,
+.blog h4,
+.blog h5,
+.blog h6 {
+  @apply dark:text-gray-50;
+}
+
+.blog h3 {
+  @apply text-xl;
+  @apply mt-8;
+  @apply mb-3;
+  @apply font-bold;
+}
+
+.blog p,
+body b {
+  @apply text-gray-800;
+  @apply dark:text-gray-300;
+  @apply mt-4;
+  @apply mb-4;
+}
+
+.blog strong {
+  @apply font-bold;
+}
+
+.blog hr {
+  @apply mb-4;
+  @apply mt-4;
+  @apply dark:border-gray-800;
+  @apply border-gray-200;
+}
+.blog a {
+  @apply text-primary;
+}
+.code-block {
+  @apply border;
+  @apply border-gray-200;
+  @apply dark:border-gray-800;
+  @apply rounded-lg;
+}
+.code-block:hover .copy-button {
+  @apply opacity-100;
+}

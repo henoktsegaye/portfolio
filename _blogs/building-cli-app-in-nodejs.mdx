@@ -1,0 +1,226 @@
+---
+date: "2023-05-15"
+thumbnail: /assets/blog/cli-cover.png
+title: Building a Cli app with Node.js
+description: Cli app is a great way for developers and technical people to interact with your application. In this article, we will learn how to build a cli app with Node.js
+hashtag: Node.js
+author: Henok Tsegaye
+---
+In this blog we are going to build a simple Cli app that lists files in a directory and shows the content of a file in that directory. We will use Node.js to build this app. 
+The aim of this blog is to show how we can intract with the console and output the result to the console.
+
+### Prerequisites
+- Node.js
+- npm or pnpm ( I am using pnpm in this blog)
+- git
+
+### Getting started
+
+To help us get started faster we are going to clone a starter project from Github that supports typescript and eslint.
+```bash
+git clone git@github.com:henoktsegaye/node-ts-starter.git
+```
+
+### Installing dependencies
+```bash
+pnpm install
+```
+When running node on the terminal, anything passed while executing the file could be accessed from the `process.argv` array. The first element of the array is the path to the node executable while the second element is the path to the file that is being executed, the rest of the elements in the array are the arguments passed to the file. 
+For example, if we run the following command on the terminal.
+```bash
+node index.js --version
+```
+The `process.argv` array will look like something like this
+```js
+[
+    '/usr/local/bin/node', // path to the node executable
+    '/Users/USERNAME/node-ts-starter/index.js', // path to the file that is being executed
+    '--version' // arguments passed to the file
+]
+```
+We can use this array to access the arguments passed and parse the arguments passed to do whatever we wanted to do( based on the arguments passed). For example, if we want to print the version of the app we can do something like this
+```js
+if (process.argv.includes('--version')) {
+    console.log('0.0.1');
+}
+```
+
+### Using npm packages
+Using the `process.argv` array to parse the arguments passed to the file could be a bit slow and tedious and error prone if we have a lot of arguments to parse.
+![Slow process](https://media.giphy.com/media/OocLVILtd7ybm/giphy.gif)
+There are a couple of great npm packages that could actually help us write this cli app faster but we could choose not to use those packages and write our own parser instead.
+ In this blog we are going to use some of this packages anyway to help us write this app faster.
+
+Here are a couple of packages that we are going to use in this blog
+
+- [commander](https://www.npmjs.com/package/commander) - help us to build a command line interface
+- [chalk](https://www.npmjs.com/package/chalk) - help us to style the output to the console
+- [inquirer](https://www.npmjs.com/package/inquirer) - help us to build interactive command line interface
+
+Once we have installed dependencies from the starter project , we can start to install our own dependencies.
+```bash
+pnpm install commander chalk inquirer
+```
+
+### Building the app
+
+A CLI app is different in the way that the user interacts with the app, there is no UI or nice interface the user could click around. Instead users have to type commands to do everything , to even get help. `Commander.js` could actually help us on this. Commander handles parsing input from the command line that the user types and helps us to define custom commands and options for our app.
+Let's see this in action.
+First let's start by creating a program from commander
+```ts
+import { Command } from 'commander';
+
+const program = new Command();
+```
+
+We created a program instance from commander. now we can start to define commands and options for our app.
+Let's start by defining a version for our app and a description.
+
+```ts
+
+program.
+version('0.0.1').
+description('A simple cli app that lists and shows the content of a directory');
+
+```
+Now that we have the basics we can call `parse` method on the program instance to parse the input from the command line and pass `process.argv`.
+```ts
+program.parse(process.argv);
+```
+Now we can run our app and see the version that we defined.
+```bash
+pnpm run dev --version
+
+# output 0.0.1
+```
+Now let's define an option that lists the content of a directory. we can do that by calling the `option` method on the program object.
+```ts
+program.
+version('0.0.1').
+description('A simple cli app that lists and shows the content of a directory').
+option('-l, --list', 'list the content of a directory').
+option('-s, --show <path>', 'show the content of a file').
+parse(process.argv);
+
+```
+Now that we have defined the options for the CLI app, we can start to implement the logic for each option. 
+```ts
+import fs from 'fs';
+import chalk from 'chalk';
+
+// previous code here
+
+const options = program.opts();
+
+// if the list option is passed  we list the content of the directory
+if (options.list) {
+    fs.readdir(process.cwd(), {withFileTypes: true} ,(err, files) => {
+     if (err) {
+        console.log(err);
+        return;
+    }
+
+    const fileList = files.map((file) => {
+        if (file.isDirectory()) { 
+            return {name:`📂 ${file.name}` , type: 'directory'}
+        }
+        return {name:`📄 ${fileList}` , type: 'file'}
+    });
+
+    fileList.forEach((file) => {
+        if (file.type === 'directory') {
+        console.log(chalk.blue(file.name));
+        } else {
+        console.log(chalk.green(file.name));
+        }
+    });
+
+}
+const readFile = (path) => {
+  fs.readFile(path, "utf-8", (err, data) => {
+    if (err) {
+      console.log(chalk.red("Error", err.message));
+      return;
+    }
+    console.log(data);
+  });
+}
+
+// if the show option is passed we show the content of the file
+if(options.show) {
+  readFile(`${process.cwd()}/${options.show}`)
+}
+```
+Now we can run our app and see the result.
+```bash
+pnpm run dev --list
+pnpm run dev --show README.md
+
+```
+Pretty neat right? its easy as that!
+But Wait there is more.
+Now that we have the basics. we want to add a prompt on the `--list` option to ask the user to select a directory / file to show the content of the directory / file.
+Let's see this in action.
+```ts
+import fs from 'fs';
+import chalk from 'chalk';
+import inquirer from 'inquirer';
+
+const options = program.opts();
+
+// Previous code here ...
+
+// separate the logic for reading a file to a function ( make this easier to read / test)
+const readDirectoryFiles = (path: string) => {
+  fs.readdir(path, { withFileTypes: true }, (err, files) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+
+    const fileList = files.map((file) => {
+      if (file.isDirectory()) {
+        return `📂 ${file.name}`;
+      }
+      return `📄 ${file.name}`;
+    });
+    inquirer
+      .prompt([
+        {
+          type: "list",
+          name: "file",
+          message: "Select a file to show the content",
+          choices: fileList,
+        },
+      ])
+       .then((answers) => {
+        const file = answers.file;
+        if (file.startsWith("📂")) {
+          return readDirectoryFiles(`${path}${file.replace("📂 ", "/")}`);
+        }
+        console.log(chalk.green(file));
+        readFile(`${path}${file.replace("📄 ", "/")}`);
+      });
+  });
+};
+
+
+// if the list option is passed  we list the content of the directory
+if(options.list) {
+    readDirectoryFiles(process.cwd());
+}
+```
+In this new way we should be able to iterate over directories to list files and select files to view the content.
+We can run our app and see the result.
+```bash
+pnpm run dev --list
+```
+You should see something like this
+![list](/assets/blog/folder-list.png)
+
+Now you can navigate through the directories and select a file to view the content.
+
+### Conclusion
+
+In this blog we have learned how to build a simple CLI app with Node.js. We have learned how to use commander to define commands and options for our app. We have also learned how to use chalk to style the output to the console and inquirer to build interactive command line interface.
+you can find the source code for this blog [here](https://github.com/henoktsegaye/file-viewer)

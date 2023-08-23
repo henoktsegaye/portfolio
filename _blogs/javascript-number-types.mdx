@@ -1,0 +1,364 @@
+---
+date: "2022-09-11"
+thumbnail: /assets/blog/Numbers/COVER1.png
+title: Deep dive into Number types in Javascript
+description: Deep dive into Javascript Numbers are primitive types and represent all number types in Javascript that include integer and floating numbers but in reality every number is represented as floating number in javascript.
+hashtag: Javascript
+author: Henok Tsegaye
+---
+
+Welcome to **Understanding Javascript basics** series. On this blog we will try to understand number types in Javascript.
+
+let's get to it 🙂
+
+---
+Any numeric value in javascript is expressed by the **Number** primitive data type and its represented as a floating point number.
+
+This is regardless the size of the number( how many bits the number take to store the value), the number sign (positive or negative ) whether or not the number has
+decimal point. In general Whole numbers and floating numbers are all represented as **Number**.
+which might be strange coming from stablished programming languages like Python, Java and C++.
+For example in Python, number data values are represented as **_Integer_** , **_Float_** or **_Complex_** types, according to the value.
+
+Number is are mostly expressed as Numeric literals.
+Numeric literals can be written in decimal, hexadecimal, octal, and binary forms.
+
+```javascript
+// Decimal
+let decimal = 10;
+
+// Hexadecimal prefix 0x
+let hex = 0xf00d;
+
+// Octal prefix 0o
+let octal = 0o744;
+
+// Binary prefix 0b
+let binary = 0b1010;
+```
+
+Note that when staring with 0 when expressing numeric literals the number would be interpreted as octal when each number digit is between 0 and 7, if not it would be interpreted as decimal.
+When expressing a numeric literal if there is a problem with the literal expression javascript would throw a **SyntaxError**.
+
+Exponential notation is also supported.
+
+```javascript
+
+// exponential notation
+
+2 ** 2; // 4
+2 ** -2; // 0.25
+
+/*
+ * exponential base 10 
+*  notation denoted as  BeN
+ * where B is the base and N is the exponent
+ * while e is the exponentiation notion - which is the same as 10^N
+ */
+
+let exponential = 1.5e3; // 1500
+let negativeExponential = 1.5e-3; // 0.0015
+
+```
+
+---
+
+In Javascript numbers are stored as binary with the [IEEE 754 standard](https://en.wikipedia.org/wiki/IEEE_754) with binary64 or double precision format.
+
+Each _Number Data type have 64 bit memory space_ which is equivalent to maximum number value of 2^64 which is equal to 18 quintillion. That is a huge number
+but one bit has to be used to represent the sign of the number , since both positive and negative numbers are represented in **Number** data type, we call that a sign bit. 
+If a sign bit is 0 it means the number is positive and if it's 1 its a negative number.
+Also more bit has to be used to represent the decimal point / exponent in a number which has 11bits in it, we call those exponent bits, its because of those bit that we say in javascript every number is represented as a decimal number.
+The fraction / mantissa bits holds the actual value in the number, which is 52 bits in size which gives us about 9 quintillion including the sign bit, which is still a huge number and should be enough for common mathematical operations but if you are in need of a bigger integer you can use [bigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt)
+
+<ImageBox
+  url="/assets/blog/Numbers/bit-representation-in-javascript.png"
+  alt="bit representation of numbers in javascript"
+  noPopup
+/>
+
+IEEE 754 standard define behaviors in javascript number like **_Infinity_** and **_NaN_** which we will look in section below.
+The standard has 5 exceptions which we should be aware of
+
+- Invalid Operation:
+
+```javascript
+// Invalid operation example
+// this is invalid operation because the result is not a real number but a complex number
+
+sqrt(-1); // NaN
+```
+
+- Zero division
+
+```javascript
+// zero division example
+
+5 / 0; // Infinity
+```
+
+- Overflow
+
+```javascript
+// overflow example
+
+Math.pow(2.54); // Infinity
+```
+
+- Underflow
+
+```javascript
+// Underflow example
+
+Math.pow(2, 54); // -Infinity
+```
+
+- imprecise values
+
+```javascript
+// imprecise value example
+
+0.1 + 0.2; // 0.300000000009
+
+9007199254740992 + 1; //9007199254740992
+```
+
+In javascript all decimal fractions can't be precisely represented which causes problems while operating on decimal point numbers.
+The above example with the imprecise value is caused by this issue.
+It is sometimes hard to get precise values from decimal point computation / expression and its always safe to assume that values are approximation instead of precise value.
+
+For Integer numbers its always safe to assume precise value as long as we don't overpass / underpass the safe integer limit `Number.MAX_SAFE_INTEGER` or `Number.MIN_SAFE_INTEGER` which is about 9 quintillion.
+
+To read more about why that is, I recommend reading this [blog](https://2ality.com/2012/04/number-encoding.html)
+
+In javascript we have two zeros 0 and -0. 0 is a positive number and -0 is a negative number.
+0 and -0 are equal but not identical.
+
+```javascript
+
+// 0 and -0 are equal but not identical
+
+0 === -0; // true
+
+4 * -1 * 0; // -0
+4 * 1 * 0 // 0
+0 + -0 // 0
+- 0 - 0; // -0
+0 - 0  // 0
+0 * 0  // -0
+-0 / 0; // NaN
+
+```
+
+---
+
+## Number Object
+
+Javascript has a wrapper object for Number data type named **_Number_** which defines some static values and methods.
+More about primitive wrapper objects <Link href="/blogs/javascript-primitives/" > here </Link>
+
+```javascript
+const numberObj = Number("32");
+// numberObj is an object
+
+console.log(numberObj);
+// 32
+
+numberObj.valueOf(); // 32
+```
+
+Javascript Number object define two important static values named **_NaN_** and **_Infinity_**.
+
+---
+
+### Infinity
+
+Infinity is also a member of the global scope object.
+A global object always exist in the global scope. It's because of this object that we can access Windows object in browsers and global in Nodejs.
+As the name suggests Infinity is a number that is greater than any other number.
+
+```javascript
+// Infinity is a static value of the Number object
+
+Infinity; // Infinity in the global scope
+Number.POSETIVE_INFINITY; // Infinity
+Number.NEGATIVE_INFINITY; // -Infinity
+```
+
+As mentioned above **_Overflow_** and **_underflow_** exceptions will return positive and negative Infinity respectively.
+
+
+<img src="https://media.giphy.com/media/3o7ZesJdQccI0sO3fy/giphy.gif" />
+
+Infinity is reached when your expression returns more than the actual limit javascript numbers can hold and that is 1.7976931348623157e+308 or -1.7976931348623157e+308.
+
+```javascript
+// Underflow example
+
+-1.7976931348623157e308 * -2; // -Infinity
+
+// Overflow example
+
+1.7976931348623157e308 + 2; // Infinity
+```
+
+To check if a number value is not Infinity we can use the `Number.isFinite()` function which returns true if the value is finite and false if the value is `Infinity` or `NaN`.
+The global `isFinite()` function is similar to `Number.isFinite()` but it will try to convert the value to a number before checking if it's finite.
+To use this function `Number.isFinite` we need to make sure that the value is a number if its not, it will always return false, we can use the `typeof` keyword to check if the value is a number.
+
+```javascript
+// check if a number is finite
+
+if (typeof value === "number" && Number.isFinite(value)) {
+  // do something
+}
+```
+
+To specifically check if a value is Infinity we can use the combination of `Number.isFinite()` and `Number.isNaN()` functions.
+
+```javascript
+// check if a number value is Infinity
+
+if (typeof value === 'number' && !Number.isFinite(value) && !Number.isNaN(value)) {
+  // value is Infinity / -Infinity
+}
+
+// we can also check if the value is infinity using equality operator
+
+if (value === Infinity || value === -Infinity) {
+  // value is Infinity / -Infinity
+}
+```
+
+Here are some properties of the Infinity value
+
+Infinity arithmetic with a finite number is always Infinity when Infinity is in the left side of the operation , but the result might have a different sign.
+when using the modulo operator with Infinity the result is always NaN since that doesn't make sense.
+
+```javascript
+// Infinity arithmetic with a finite number
+
+Infinity * 3; // Infinity
+Infinity * -3; // -Infinity
+Infinity + 3; // Infinity
+Infinity - 3; // Infinity
+Infinity / 3; // Infinity
+
+// modulo operator with Infinity is always NaN
+
+Infinity % 3; // NaN
+```
+
+Infinity operation with finite numbers when Infinity/-infinity is on the right hand side of the operation.
+
+```javascript
+// Infinity arithmetic with 0
+
+0 / Infinity; // 0
+0 / -Infinity; // -0
+Infinity / 0 // Infinity
+-Infinity / 0 // -Infinity
+
+4 / Infinity // 0
+-4 / Infinity; // -0
+4 - Infinity; // -Infinity
+4 + Infinity; // Infinity
+4 * Infinity; // Infinity
+4 % Infinity; // 4
+
+```
+
+---
+
+### NaN
+
+NaN is a special number type in javascript. NaN like Infinity is a member of the global scope object and also a static value of the Number class.
+NaN stands for **_Not a Number_**.
+
+
+There are four operations that will return NaN.
+
+1. Failed number conversion
+2. Math operations where result is not a real number.
+3. Indeterminate calculation
+4. Operation with NaN
+
+```javascript
+// Failed number conversion
+
+Number("hello"); // NaN
+Number("32hello"); // NaN
+
+// Math operations where result is not a real number
+
+Math.sqrt(-1); // NaN , i.e this operation would result in a complex number not a real number
+Math.log(-1); // NaN
+
+// Indeterminate calculation
+
+0 / 0; // NaN
+0 * Infinity; // NaN
+Infinity / Infinity; // NaN
+Infinity - Infinity; // NaN
+
+// Operation with NaN
+
+NaN + 1; // NaN
+NaN - 1; // NaN
+NaN * 1; // NaN
+NaN / 1; // NaN
+//hello would be converted to NaN and then the operation would be performed
+4 * "hello"; // NaN
+```
+
+Here are some behaviors of NaN.
+
+- NaN is not equal to any value including NaN itself.
+- NaN when used with arithmetic operators will always return NaN.
+- NaN when used with comparison operators will always return false.
+
+```javascript
+// NaN is not equal to any value including NaN itself
+
+NaN === NaN; // false
+NaN !== NaN; // true
+
+// NaN when used with arithmetic operators will always return NaN
+
+NaN + 1; // NaN
+NaN - 1; // NaN
+NaN * 1; // NaN
+NaN / 1; // NaN
+
+// NaN when used with comparison operators will always return false
+
+NaN > 1; // false
+NaN < 1; // false
+NaN >= 1; // false
+NaN <= 1; // false
+NaN == 1; // false
+NaN === 1; // false
+NaN != 1; // true
+NaN !== 1; // true
+
+```
+
+`Number.isNaN()` function is used to check if a value is NaN.
+This function is different from the global `isNaN()` function which will try to convert the value to a number and then check if it's NaN.
+`Number.isNaN()` will only check if the value is NaN and will not try to convert it to a number. If the value being checked is not a number it will return false.
+
+```javascript
+// check if a value is NaN
+
+Number.isNaN(NaN); // true
+Number.isNaN(1); // false
+Number.isNaN("hello"); // false
+
+// isNaN() will try to convert the value to a number and then check if it's NaN
+
+isNaN(NaN); // true
+isNaN(1); // false
+isNaN("hello"); // true
+
+```
+
+This has been a long article, We will carry on our journey of understanding primitive types in javascript. I hope you enjoyed this one. Until next time ***✌🏽***.
