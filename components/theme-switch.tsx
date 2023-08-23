@@ -40,16 +40,16 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
       {isSelected ? (
         <MoonFilledIcon
           onClick={onChange}
-          className="  text-default-500"
-          width="22px"
-          height="22px"
+          className="text-default-500"
+          width="24px"
+          height="24px"
         />
       ) : (
         <SunFilledIcon
           onClick={onChange}
           className="  text-default-500"
-          width="22px"
-          height="22px"
+          width="24px"
+          height="24px"
         />
       )}
     </div>

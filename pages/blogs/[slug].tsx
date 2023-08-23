@@ -49,7 +49,7 @@ const PostPage: React.FC<Props> = ({ slug, source, frontMatter }: Props) => {
         />
       }
     >
-      <div className=" border-t border-b dark:border-gray-800  w-full pt-12">
+      <div className="  border-b dark:border-gray-800  w-full pt-12">
         <div className="lg:max-w-screen-lg flex justify-start items-end max-w-sm mx-auto">
           <div>
           <Text
@@ -60,7 +60,7 @@ const PostPage: React.FC<Props> = ({ slug, source, frontMatter }: Props) => {
             </Text>
             <Text
               isTitle
-              className="mb-6 line-clamp-2 dark:text-transparent text-transparent dark:bg-clip-text  bg-clip-text dark:bg-gradient-to-r bg-gradient-to-r dark:from-green-400 from-green-500 hover:dark:to-red-500 hover:dark:from-green-500 transition-colors duration-75 dark:to-blue-400 to-blue-600 "
+              className="mb-6 line-clamp-2 dark:text-transparent text-transparent dark:bg-clip-text  bg-clip-text dark:bg-gradient-to-r bg-gradient-to-r dark:from-pink-200 from-green-800 hover:dark:to-red-100 hover:dark:from-green-100 transition-colors duration-75 dark:to-blue-300 to-blue-900 "
               bold="extrabold"
               size="3xl"
             >

@@ -25,10 +25,10 @@ export default function DefaultLayout({
           {Tools.map((el) => (
             <div
               key={el.title}
-              className=" py-2 min-w-[200px] px-4 rounded-xl border dark:border-gray-800 bg-gray-100 dark:bg-gray-800 border-gray-200 "
+              className=" py-2 min-w-[230px] px-4 rounded-xl border dark:border-gray-800 bg-gray-100 dark:bg-gray-800 border-gray-200 "
             >
               <p className="text-lg font-bold mb-4"> {el.title} </p>
-              <p className=" text-sm mb-4 h-12 ">{el.description}</p>
+              <p className=" text-sm mb-6 h-28 ">{el.description}</p>
 
               {el.link && (
                 <Link target="_blank" href={el.link}>
@@ -36,7 +36,7 @@ export default function DefaultLayout({
                     variant="light"
                     type="button"
                     color="primary"
-                    size="md"
+                    size="sm"
                     endContent={
                       <ExternalLinkIcon
                         fill="currentColor"

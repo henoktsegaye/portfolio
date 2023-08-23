@@ -10,12 +10,12 @@ import { User } from "@nextui-org/react";
 
 export const NavbarComponent = () => {
   return (
-    <Navbar.Navbar    maxWidth="xl" >
+    <Navbar.Navbar  isBordered  maxWidth="xl" >
       <Navbar.NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <Navbar.NavbarBrand className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
             <User
-              name="Henok"
+              name="Henok Tsegaye"
               description="Software Engineer"
               avatarProps={{
                 src: "https://avatars.githubusercontent.com/u/37017648?v=4",
@@ -43,7 +43,7 @@ export const NavbarComponent = () => {
             <GithubIcon
               width="24px"
               height="24px"
-              className="  text-default-500"
+              className="text-default-500"
             />
           </Link>
           <ThemeSwitch />
@@ -55,14 +55,14 @@ export const NavbarComponent = () => {
           <GithubIcon
             width="24px"
             height="24px"
-            className="  text-default-500"
+            className="text-default-500"
           />
         </Link>
         <Link isExternal href={siteConfig.links.twitter}>
           <TwitterIcon
-            width="24px"
-            height="24px"
-            className="  text-default-500"
+            width="26px"
+            height="26px"
+            className="text-default-500"
           />
         </Link>
         <ThemeSwitch />
