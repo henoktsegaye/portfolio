@@ -1,5 +1,5 @@
 import { NavbarComponent } from "components/Navbar";
-import { Link } from "@nextui-org/link";
+import { Link } from "@nextui-org/react";
 import { Head } from "./head";
 import { Button, Divider } from "@nextui-org/react";
 import { Tools } from "@/config/site";
