@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { FC, useState } from "react";
 import Lightbox from "react-image-lightbox";
 

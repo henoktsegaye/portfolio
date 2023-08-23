@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Code } from "./code";
 
 type Props = {
@@ -23,7 +24,7 @@ const CodeAndImageBox = ({ url, alt, limit = true, code }: Props) => {
           width: "40%",
         }}
       >
-        <Code className="" children={code} />
+        <Code className="">{code}</Code>
       </div>
       <img
         alt={alt}
