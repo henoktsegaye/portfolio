@@ -24,7 +24,7 @@ export const siteConfig = {
 export const Tools = [
   {
     title: "TD Manager",
-    description: "Helps you manage TD(Technical Debit) right from Vscode.",
+    description: "Helps you manage TD(Technical debt) right from Vscode.",
     link: "https://marketplace.visualstudio.com/items?itemName=HenokTsegaye.td-manager",
   },
   {

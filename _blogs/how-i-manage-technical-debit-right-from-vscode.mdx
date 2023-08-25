@@ -1,23 +1,23 @@
 ---
 date: "2023-08-22"
 thumbnail: /assets/blog/TD-cover.png
-title: How I manage Technical debit right from vscode.
-description: If you have been working on a project for a while , you might know where the messes are ( Parts that have Technical debit ). It’s like a city in a sense
+title: How I manage Technical debt right from vscode.
+description: If you have been working on a project for a while , you might know where the messes are ( Parts that have Technical debt ). It’s like a city in a sense
 hashtag: code
 author: Henok Tsegaye
 ---
-**Before we dive in to this blog I like to point out that I use “mess” and Technical debit ( TD) interchangeably.**
+**Before we dive in to this blog I like to point out that I use “mess” and Technical debt ( TD) interchangeably.**
 
-I am not going to clarify what T**echnical Debit** is as its a common term and kinda conventional wisdom but If you like to dive into that I suggest you do that before reading this blog
-
-
+I am not going to clarify what T**echnical debt** is as its a common term and kinda conventional wisdom but If you like to dive into that I suggest you do that before reading this blog
 
 
-## Technical debit is common.
+
+
+## Technical debt is common.
 ---
 
 
-If you have been working on a project for a while , you might know where the messes are ( Parts that have **Technical debit** ). 
+If you have been working on a project for a while , you might know where the messes are ( Parts that have **Technical debt** ). 
 
 It’s like a city in a sense. each city has parts that are well maintained with nice side walks and roads and the infrastructure well kept but when you stay a while and look around new places you find parts of the city with a messy side walk , bumpy roads and even worse dangerous hoods to live in. you usually know the latter after living for in the city for sometime.
 
@@ -31,7 +31,7 @@ After dealing with a lot of the above issues I came up with a method that worked
 
 
 
-## Why is dealing with Technical debit hard ?
+## Why is dealing with Technical debt hard ?
 ---
 Going back to the broken window glass analogy - you want to fix broken glasses before another broken glass appears in the neighborhood ( if you have a couple of them that is ).
 
@@ -65,7 +65,7 @@ aah the classic **refactoring myopia** . its easier when you think about easy an
 
 But wait we don’t want to refactor all bad code , there are codes that severely need refactoring while others we can even leave for later but you are the one who know the level of TD a code has ( as you are the developer ) so you don’t only need to communicate but also prioritize , hmm
 
-Fortunately you can set the severity ( priority ) of the `TD comment` - aha that way you can decide as a team you want to clean up only severe technical debits.
+Fortunately you can set the severity ( priority ) of the `TD comment` - aha that way you can decide as a team you want to clean up only severe technical debts.
 
 That is cool but what about related parts among different files? because refactoring usually encompasses different files and you want to combine / clean up related files. 
 
@@ -90,8 +90,8 @@ Well `TD comments` are just comments in your code as the name implies. they have
 
 Each label has a 
 
-- Label - which states the name for a technical debit , you can name this with a specific feature , for example if you are refactoring som …. [finish]
-- level - specify the severity / priority of the technical debit - 1 being the least and 5 the highest
+- Label - which states the name for a technical debt , you can name this with a specific feature , for example if you are refactoring som …. [finish]
+- level - specify the severity / priority of the technical debt - 1 being the least and 5 the highest
 - message - in the message you can describe why you put the comment and anything you want to say
 
 ### So how do we use it
