@@ -15,7 +15,7 @@ const BlogCard = ({ blog }: BlogCardProps) => {
   const { title, description, slug, date, content } = blog;
   const mins = predictReadMinutes(content);
   return (
-    <div  className="  h-50 rounded-xl border-gray-200 dark:border-gray-800">
+    <div className="  h-50 rounded-xl border-gray-200 dark:border-gray-800">
       <div
         className={` lg:col-span-6  gap-4   grid-cols-3 items-center cursor-pointer grid   rounded-lg lg:grid-cols-6   `}
         onClick={(e) => {
@@ -25,14 +25,14 @@ const BlogCard = ({ blog }: BlogCardProps) => {
       >
         <div className=" mb-4 bg-gray  rounded-xl  p-4 col-span-6  flex flex-col justify-between pr-4 ">
           <div>
-         
+            <img src={blog.thumbnail} className=" rounded-xl mb-4 w-full" />
             <Link href={`/blogs/${slug}`}>
               <Text
                 isTitle
                 size="xl"
                 bold="extrabold"
                 className=" line-clamp-2 dark:text-transparent text-transparent dark:bg-clip-text  bg-clip-text dark:bg-gradient-to-r bg-gradient-to-r dark:from-pink-200 from-green-800 leading-10 hover:dark:to-red-100 hover:dark:from-green-100 transition-colors duration-75 dark:to-blue-300 to-blue-900 "
-                >
+              >
                 {title}
               </Text>
               <Text size="sm" className=" mt-2 ">
@@ -43,7 +43,7 @@ const BlogCard = ({ blog }: BlogCardProps) => {
             <p className="line-clamp-2 mt-4 mr-12">{description}</p>
           </div>
           <Text className=" mt-2">
-            <Text size="sm"  className="line-clamp-2  mr-12">
+            <Text size="sm" className="line-clamp-2  mr-12">
               {mins} minute read
             </Text>
           </Text>

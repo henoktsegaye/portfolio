@@ -49,10 +49,18 @@ const PostPage: React.FC<Props> = ({ slug, source, frontMatter }: Props) => {
         />
       }
     >
-      <div className="  border-b dark:border-gray-800  w-full pt-12">
+      <div
+        className="  border-b dark:border-gray-800  w-full   pt-40"
+        style={{
+          backgroundImage: `url(${frontMatter?.thumbnail})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+         }}
+      >
         <div className="lg:max-w-screen-lg flex justify-start items-end max-w-sm mx-auto">
           <div>
-          <Text
+            <Text
               size="md"
               className="text-gray-500 block mb-2  dark:text-gray-400"
             >
@@ -66,7 +74,6 @@ const PostPage: React.FC<Props> = ({ slug, source, frontMatter }: Props) => {
             >
               {frontMatter?.title}
             </Text>
-          
           </div>
         </div>
       </div>
