@@ -45,8 +45,8 @@ export default function DefaultLayout({
           content="/favicon/browserconfig.xml"
         />
         <meta name="theme-color" content="#fff" />
-        {head}
       </Head>
+      {head}
       <NavbarComponent />
       <main className=" relative contents ">{children}</main>
       <Divider />

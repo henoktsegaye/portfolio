@@ -35,6 +35,11 @@ const PostPage: React.FC<Props> = ({ slug, source, frontMatter }: Props) => {
         <NextSeo
           title={`${siteConfig.name} - ${frontMatter?.title}`}
           description={frontMatter?.description}
+          twitter={{
+            handle: "@henokcode",
+            site: "@site",
+            cardType: "summary_large_image",
+          }}
           openGraph={{
             url: `${process.env.NEXT_PUBLIC_SITE_URL}/blogs/${slug}`,
             title: frontMatter?.title,
@@ -44,6 +49,7 @@ const PostPage: React.FC<Props> = ({ slug, source, frontMatter }: Props) => {
                 url: frontMatter?.thumbnail,
               },
             ],
+          
             siteName: siteConfig.name,
           }}
         />
