@@ -7,7 +7,8 @@ type Props = {
   slug?: string;
   color?: string;
 };
-// TD: [genial](3) - use next/img and make it readable
+
+// TD: [component](2) - use next/image and use color! 
 const Featured: React.FC<Props> = ({ title, src, slug, color }: Props) => {
   const image = (
     <div className={` bg-transparent py-4`}>

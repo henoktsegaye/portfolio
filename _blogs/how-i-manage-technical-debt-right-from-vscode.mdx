@@ -6,9 +6,9 @@ description: If you have been working on a project for a while , you might know 
 hashtag: code
 author: Henok Tsegaye
 ---
-**Before we dive in to this blog I like to point out that I use “mess” and Technical debt ( TD) interchangeably.**
+**Before we dive into this blog I like to point out that I use “mess” and Technical debt ( TD) interchangeably.**
 
-I am not going to clarify what T**echnical debt** is as its a common term and kinda conventional wisdom but If you like to dive into that I suggest you do that before reading this blog
+I am not going to clarify what **Technical debt** is as it's a common term and kinda conventional wisdom but If you like to dive into that I suggest you do that before reading this blog
 
 
 
@@ -16,72 +16,77 @@ I am not going to clarify what T**echnical debt** is as its a common term and ki
 ## Technical debt is common.
 ---
 
+If you have been working on a project for a while, you might know where the messes are ( Parts that have **Technical debt** ).
 
-If you have been working on a project for a while , you might know where the messes are ( Parts that have **Technical debt** ). 
+It’s like a city in a sense. each city has parts that are well maintained with nice sidewalks and roads and the infrastructure well kept but when you stay a while and look around new places you find parts of the city with a messy sidewalk, bumpy roads, and even worse dangerous hoods to live in. you usually know the latter after living for in the city for some time.
 
-It’s like a city in a sense. each city has parts that are well maintained with nice side walks and roads and the infrastructure well kept but when you stay a while and look around new places you find parts of the city with a messy side walk , bumpy roads and even worse dangerous hoods to live in. you usually know the latter after living for in the city for sometime.
+Getting back to my topic You want to fix these messes But you might not have enough time or they are used in many places making it hard to fix them (at least related ones). So you just leave them there and hope you will fix them later. spoiler alert You never do.
 
-Getting back to my topic You want to fix theses messes  But you might not have enough time or they are used on many places making it hard to fix them (at least related ones). So you just leave them there and hope you will fix them later. spoiler alert you never do.
+But those messes spread like wildfire. even (Andrew Hunt and Dave Thomas authors of the PP(Pragmatic Programmer)) explain this in a broken window glass analogy. once a building in a neighborhood has a broken window glass the neighborhood starts to have multiple broken window glasses all over and before you know it it's a messy neighborhood ( it becomes a bad part of town). If you leave the mess alone, it won’t clean itself even worse it will make your whole codebase even messier.
 
-But  those messes  spread like a wildfire. even (Andrew Hunt and Dave Thomas author of the PP(Pragmatic Programmer)) explain this in a broken window glass analogy.  once a building in a neighborhood has a broken window glass the neighborhood start to have multiple broken window glasses all over and before you know it its a messy neighborhood ( it becomes a bad part of town).  If you leave the mess alone , it won’t clean it self even worse it will make your whole codebase even messier.
+As one of my programmer friends said “I write code that looks like the code around it” and I think every developer does this at some level.
 
-As one of my programmer friend said “I write code that looks like the code around it” and I think every developer does this at some level.
-
-After dealing with a lot of the above issues I came up with a method that worked best for me before explaining that let’s talk about what makes  TD hard to track and fix ?
-
+After dealing with a lot of the above issues I came up with a method that worked best for me before explaining that let’s talk about what makes TD hard to track and fix.
 
 
-## Why is dealing with Technical debt hard ?
+
+
+## Why is dealing with Technical debt hard?
 ---
+
 Going back to the broken window glass analogy - you want to fix broken glasses before another broken glass appears in the neighborhood ( if you have a couple of them that is ).
 
-If you have multiple broken glasses you are not only going to fix those that are broken now but also windows that are going to be broken soon( trust me they are coming ) 
+If you have multiple broken glasses you are not only going to fix those that are broken now but also windows that are going to be broken soon( trust me they are coming )
 
-enough with the analogy so What I am saying is once you have a messy code someone might write a code that look like it ( messy) so you need to fix it ASAP before another one pops in because as we all know development never stops.
+enough with the analogy so What I am saying is once you have a messy code someone might write a code that looks like it ( messy) so you need to fix it ASAP before another one pops in because as we all know development never stops.
 
-But this is not realistic we don’t usually have time and you might be even on a stage where you have many messes in you code already , so what shall you do in these case ?
-
-
+But this is not realistic we don’t usually have time and you might be even at a stage where you have many messes in your code already, so what shall you do in these cases?
 
 ### Proposed solution
 ---
 
-Here is what I am proposing comes in , **put a yellow tape round it!**  
+Here is what I am proposing comes in, **put a yellow tape around it!**
 
-Yep I am suggesting putting a yellow tape around the broken window glass implying you are planning to fix it soon.
+Yep, I am suggesting putting yellow tape around the broken window glass implying you are planning to fix it soon.
 
-If you can’t fix it now, communicate with other developers that this is a mess and you are planing to fix it soon , other developers will see the yellow tape ( a **TD comment** ) and won’t adapt it at least or in some case fix it in the process.
+If you can’t fix it now, communicate with other developers that this is a mess and you are planning to fix it soon, Other developers will see the yellow tape ( a **TD comment** ) and won’t adapt it at least or in some cases fix it in the process.
 
-This idea is not new you are already using this in your code with (eg TODO comments ) , also experimental flags as well , you ship products that are not yet finished ( not tested properly or might have bugs) but you ship them with an experimental flag well because feedback is valuable.
+This idea is not new you are already using this in your code (e.g. TODO comments ), also experimental flags as well, You ship products that are not yet finished ( not tested properly or might have bugs) but you ship them with an experimental flag well because feedback is valuable.
 
-### But why label it , why not just fix it ?
+### But why label it, why not just fix it?
 ---
 
 **Fixing a mess (Refactoring) is not easy**
 
-Refactoring a bad code starts from identifying bad code before doing the actual work. its not a good idea to refactor one part of a related code and leave other untouched.
-On top of that you have to work in teams. Working in teams is particularly difficult because you might not be the one that need to clean the code , as the other members are responsible / more equipped to do the cleaning but communicating is hard . You have to give line numbers and file path and how do you track if its fixed ?
-aah the classic **refactoring myopia** . its easier when you think about easy and small stuff but when it get bigger and complex that is when it gets fuzzy
+Refactoring a bad code starts with identifying bad code before doing the actual work. it's not a good idea to refactor one part of a related code and leave the other untouched. On top of that, you have to work in teams. Working in teams is particularly difficult because you might not be the one who needs to clean the code, as the other members are responsible / more equipped to do the cleaning but communicating is hard. You have to give line numbers and file path and how do you track if it's fixed? aah, the classic **refactoring myopia**. It is easier when you think about easy and small stuff but when it gets bigger and complex that is when it gets fuzzy
 
-But wait we don’t want to refactor all bad code , there are codes that severely need refactoring while others we can even leave for later but you are the one who know the level of TD a code has ( as you are the developer ) so you don’t only need to communicate but also prioritize , hmm
+But wait we don’t want to refactor all bad code, There are codes that severely need refactoring while others we can even leave for later but you are the one who knows the level of TD a code has ( as you are the developer ) so you don’t only need to communicate but also prioritize, hmm
 
-Fortunately you can set the severity ( priority ) of the `TD comment` - aha that way you can decide as a team you want to clean up only severe technical debts.
+Fortunately, you can set the severity ( priority ) of the
 
-That is cool but what about related parts among different files? because refactoring usually encompasses different files and you want to combine / clean up related files. 
+TD comment
 
-For example let’s say you want to clean up user management - that is huge (takes a lot of effort and time to refactor ) but you want to break it down and fix profile management instead. But wait the code is all over the place , how do you deal with that ? hmm…
+- aha That way you can decide as a team you want to clean up only severe technical debts.
 
-ahh the `TD comments` has support for  labels. It can be anything you like to help you relate related code - it could be a sub feature / any other way you prefer
+That is cool but what about related parts among different files? because refactoring usually encompasses different files and you want to combine/clean up related files.
+
+For example, let’s say you want to clean up user management - that is huge (takes a lot of effort and time to refactor ) but you want to break it down and fix profile management instead. But wait the code is all over the place, how do you deal with that? hmm…
+
+ahh the
+
+TD comments
+
+has support for labels. It can be anything you like to help you relate related code - it could be a sub-feature / any other way you prefer
 
 ## Save your tears for another day
 
 <img src="https://media.giphy.com/media/xPqYFRk3d5x2vCyAGz/giphy.gif" />
 
-Putting a `TD comment` doesn’t relive you of the responsibility to refactor, You still need to refactor but next time that is but will that day come ? Hopefully yes but for now maybe you can start by making a task in your project management tool and keep it in the backlog.
+Putting a `TD comment` doesn’t relieve you of the responsibility to refactor, You still need to refactor but next time that is but will that day come? Hopefully yes but for now maybe you can start by making a task in your project management tool and keep it in the backlog.
 
-aha grouped labels need to be related with a task - but that is for later we don’t have support for that yet but on the pipeline
+aha grouped labels need to be related to a task - but that is for later we don’t have support for that yet but on the pipeline
 
-But How do I use `TD comments` and what are they ?
+But How do I use `TD comments` And what are they?
 
 Well `TD comments` are just comments in your code as the name implies. they have a certain structure to help discover them from your code and help analyze them.
 
@@ -90,23 +95,22 @@ Well `TD comments` are just comments in your code as the name implies. they have
 
 Each label has a 
 
-- Label - which states the name for a technical debt , you can name this with a specific feature , for example if you are refactoring som …. [finish]
-- level - specify the severity / priority of the technical debt - 1 being the least and 5 the highest
-- message - in the message you can describe why you put the comment and anything you want to say
+- Label - which states the name for a technical debt, you can name this with a specific feature, for example, if you are refactoring som …. [finish]
+- Level - specify the severity/priority of the technical debt - 1 being the least and 5 the highest
+- Message - in the message you can describe why you put the comment and anything you want to say
 
 ### So how do we use it
 
-When I first wanted to build this tool I wanted a VS-Code extension that scans my code of TD and show me where with a little stat so that is basically what I have now but I also see a use of this tool using a CLI tool or other IDEs as well
+When I first wanted to build this tool I wanted a VS-Code extension that scans my code of TD and shows me where with a little stat so that is basically what I have now but I also see a use of this tool using a CLI tool or other IDEs as well
 
-But as of this writing you can install he extension from [here](https://marketplace.visualstudio.com/items?itemName=HenokTsegaye.td-manager) 
+But as of this writing, you can install the extension from [here](https://marketplace.visualstudio.com/items?itemName=HenokTsegaye.td-manager) 
 
 Here is a little animation to show you how things work
 
-<img src="/assets/blog/td-manager/td-manager.gif" alt="td-manager gif"   />
+<video controls autoplay src="/assets/blog/td-manager/td-manager.mov" alt="td-manager gif"   />
 
 ### Try it
 ---
 
-Try to use the extension if it make sense for you and i would love to get feedback from developers as well since this is FOSS you can also contribute to it
-
+Try to use the extension if it makes sense for you and I would love to get feedback from developers as well since this is FOSS you can also contribute to it
 Here is a GitHub [link](https://github.com/henoktsegaye/TD-manager)
