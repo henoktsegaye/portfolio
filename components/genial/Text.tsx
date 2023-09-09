@@ -3,7 +3,7 @@ import { createElement, ReactNode } from "react";
 type TextTitles = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 interface TextProps {
   isTitle?: boolean;
-  size?: "md" | "sm" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
+  size?: "md" | "sm" | "xs" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
   children?: ReactNode;
   title?: TextTitles;
   bold?: "thin" | "bold" | "extrabold" | "extralight";
@@ -19,6 +19,7 @@ const Text = ({
   className,
 }: TextProps) => {
   const classes = classNames({
+    "text-xs": size === "xs",
     "text-sm": size === "sm",
     "text-base ": size === "md",
     "text-lg": size === "lg",

@@ -101,7 +101,8 @@ sqrt(-1); // NaN
 ```javascript
 // overflow example
 
-Math.pow(2.54); // Infinity
+1.7976931348623157e308 + 2; // Infinity
+
 ```
 
 - Underflow
@@ -109,7 +110,8 @@ Math.pow(2.54); // Infinity
 ```javascript
 // Underflow example
 
-Math.pow(2, 54); // -Infinity
+-1.7976931348623157e308 * -2; // -Infinity
+
 ```
 
 - imprecise values
@@ -144,7 +146,7 @@ In javascript we have two zeros 0 and -0. 0 is a positive number and -0 is a neg
 0 + -0 // 0
 - 0 - 0; // -0
 0 - 0  // 0
-0 * 0  // -0
+0 * -0  // -0
 -0 / 0; // NaN
 
 ```
