@@ -89,36 +89,42 @@ const PostPage: React.FC<Props> = ({ slug, source, frontMatter }: Props) => {
         </div>
       </div>
       <div className="lg:max-w-screen-lg max-w-sm mx-auto pb-10">
-        <article className="prose  prose-blue mt-10">
-          <div className="  blog dark:border-gray-900">
-            <MDXRemote
-              components={{
-                ImageBox,
-                CodeAndImageBox,
-                code: (props: { className?: string; children?: ReactNode }) => {
-                  if (
-                    typeof props.children === "string" &&
-                    props.children.split("\n").length === 1
-                  ) {
-                    return (
-                      <pre className="bg-gray-200 inline-block text-red-500 px-2 rounded py-0 dark:text-red-200 dark:bg-gray-800">
-                        {props.children}
-                      </pre>
-                    );
-                  }
-                  return <Code {...props} />;
-                },
-
-                Link: Link,
-              }}
-              {...source}
-            />
-          </div>
-        </article>
+        <Content source={source} className="mt-10" />
       </div>
     </DefaultLayout>
   );
 };
+
+export function Content({ source , className}: { source: MDXRemoteSerializeResult, className?: string }) {
+  return (
+    <article className={`prose  prose-blue  ${className ?? ''} `}>
+      <div className="  blog dark:border-gray-900">
+        <MDXRemote
+          components={{
+            ImageBox,
+            CodeAndImageBox,
+            code: (props: { className?: string; children?: ReactNode }) => {
+              if (
+                typeof props.children === "string" &&
+                props.children.split("\n").length === 1
+              ) {
+                return (
+                  <pre className="bg-gray-200 inline-block text-red-500 px-2 rounded py-0 dark:text-red-200 dark:bg-gray-800">
+                    {props.children}
+                  </pre>
+                );
+              }
+              return <Code {...props} />;
+            },
+
+            Link: Link,
+          }}
+          {...source}
+        />
+      </div>
+    </article>
+  );
+}
 
 export default PostPage;
 
@@ -136,8 +142,6 @@ export const getStaticProps = async ({
     scope: data,
   });
 
-  const { posts } = getAllPosts(["slug"]);
-
   return {
     props: {
       source: mdxSource,
@@ -148,7 +152,7 @@ export const getStaticProps = async ({
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const { posts } = getAllPosts(["slug"]);
+  const { posts } = await getAllPosts(["slug"]);
   const enPaths: returnPath[] = posts.map((post) => ({
     params: {
       slug: post.slug,

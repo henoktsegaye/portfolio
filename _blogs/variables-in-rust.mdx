@@ -1,0 +1,206 @@
+---
+date: "2023-11-16"
+thumbnail: /assets/blog/rust_variables.png
+title: Variables in Rust.
+description: Aha Rust the most loved programming language. What does its variable look like if it does have one? Spoiler alert it does have one and it is very interesting.
+hashtag: rust
+author: Henok Tsegaye
+---
+
+Hello 👋🏾 , welcome !
+
+I am learning Rust and I am finding much of the language very interesting and I am falling in love already , haha.
+
+Either ways I wanted to blog some the topics that I am learning and Find interesting and I am staring with the basic!
+
+## Variables
+
+Few points about variables in Rust.
+
+1. Every variable is immutable by default
+2. to make it mutable you can just add `mut`
+3. Variables are ==! constants
+4. Constants are always immutable , you can make variables mutable or not
+5. Constants should be annotated! 
+    
+    ```rust
+    // varaibles with default immutablity
+    let a = 4;
+    
+    // mutable vairables
+    let mut a = 4
+    
+    // convention to make your constant Capital and snake case 🐍
+    const EXAMPLE_CONSTANT:u32 = 444;
+    ```
+    
+
+## Constants ☀️
+
+Constants can be declared on any scope 
+
+- Global scope
+- any other scope
+
+In **`Rust`** Scopes are determined by **`{}`** unlike `JS`  which depends on the declaration keyword you use 🤦🏾‍♂️.
+
+If you use `var` its function scoped while `let` and `const` act on a `{}` scope!
+
+ Constants could only be set to a constant expression that include a variable with a known value before runtime
+
+```rust
+const FIRST_CONSTAT:u32 = 33*33; ✅
+// So you can't use mutable variable to compute value of a constant!
+const SECOND_CONSTAT:u33 = a*4; ✅
+
+let mut ex = 3;
+
+// this is going to throw an error compile time!
+const THIRD_CONSTANT = ex*4 ❌
+```
+
+I.e rust uses snake-case with capital for constants as a convention!
+
+## Shadowing 🥷🏾
+
+Shadowing happens when you hide a variable in a higher scope or same scope by using the same variable name.
+
+Shadowing is common in many programming languages and somehow the same rule applies to `rust` but rust shadowing was weird for one reason. 
+
+- You can shadow a variable in the same scope 🤯
+    
+    If you tell this to `JS` It would probably crash! 
+    
+
+```rust
+// declare a variable with name a
+let a = 33;
+
+// Error ( variables are immutable )
+a = 32;
+// this is valid in rust ( same scope level shadowing)
+let a =32;
+
+fn deeper() {
+	// now a is different
+	let a = 44;
+}
+```
+
+The above code will throw an error for immutability  ! but re-declaring with the same is fine with `rust` 🦀
+
+# Data types in Rust
+
+Rust have two types of data `scaler` and `compound`
+
+Scalar Data types are four
+
+1. Character
+2. Integer
+3. Float
+4. Boolean
+
+Here  notice string is not a scalar data type!
+
+### Characters
+
+Characters are four byte size data types that can hold unicodes , and characters in different languages.
+
+### Integers
+
+Integers can be signed or unsigned and can hold different sizes of data. the well known sizes are the following
+
+1. 8 ( u8 , i8)
+2. 16 (u16 , i16 )
+3. 32 (u32, i32 )
+4. 64 (u64 , i64 )
+5. 128 ( u128 , i128 )
+6. arch (usize , isize) - this depends on the arch of your computer - if your computer is 64 bit it will be 64 bit , if not 32 bits or what ever the arch of your computer is!
+
+so for signed Integers
+
+1 bit is used for sign so the actual value the number variable can hold is 2^(n-1) for any n while 
+
+for unsigned it would just be `(2^n)-1`
+
+## Number literals
+
+Number literals are exciting way of writing different base of numbers in that languages - the first  four are basically same as JS except for using `_` (which is basically the same as `,` in Real life 🙂)
+
+<table>
+    <thead>
+        <tr>
+            <th>Number literals</th>
+            <th>Example</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Decimal</td>
+            <td>98_222 same as 98,222</td>
+        </tr>
+        <tr>
+            <td>Hex</td>
+            <td>0xff</td>
+        </tr>
+        <tr>
+            <td>Octal</td>
+            <td>0o77</td>
+        </tr>
+        <tr>
+            <td>Binary</td>
+            <td>0b1111_0000</td>
+        </tr>
+        <tr>
+            <td>Byte (u8 only)</td>
+            <td>b'A'</td>
+        </tr>
+    </tbody>
+
+</table>
+ 
+
+### Integral overflow
+
+I suggest you don’t overflow your `int` but if you do be aware of how rust handles it in Prod. 👇🏾
+
+[link](https://doc.rust-lang.org/book/ch03-02-data-types.html#integer-overflow)
+
+### Float Numbers
+
+represented as single or double permission , implemented the same as JS , IEE-754 standard.
+
+Sounds familiar ? JS has the same standard too!
+
+```rust
+// single percision
+let a: f32 = 44.4;
+// double percision ( default )
+let b: f64 = 44.33;
+
+```
+
+*Integer Operations*  truncate toward zero ( for +,-,*,/)
+
+## compound types
+
+There are two primitive compound types 
+
+1. Tuples ( array of different types )
+2. Array ( type of similar types ) - Array have fixed size and data is allocated on the stack rather than the heap.
+
+```rust
+// tuple with two i32 bits
+let tup = (33,33);
+
+// type for tuples
+let person: (str,u8) = ('abebe', 22)
+
+let arr1 = [33,44]
+
+// which is the same as below (with data annotation)
+let arr1:[i32;2] = [33,44]
+
+```
+
+One main difference between those two compound types and other collections you encounter in `rust` like `vec` and `String` is that these compound types live in the stack because

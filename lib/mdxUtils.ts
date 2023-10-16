@@ -2,9 +2,11 @@
 import fs from "fs";
 import { join } from "path";
 import matter from "gray-matter";
+import { serialize } from "next-mdx-remote/serialize";
+import { MDXRemoteSerializeResult } from "next-mdx-remote";
 
 type Items = {
-  [key: string]: string;
+  [key: string]: string | MDXRemoteSerializeResult;
 };
 
 type Post = {
@@ -43,14 +45,16 @@ export function getPost(slug: string, isWorks: boolean): Post {
   return { data, content };
 }
 
-export function getPostItems(
+export async function getPostItems(
   filePath: string,
   fields: string[] = [],
   isWorks = false
-): Items {
+): Promise<Items> {
   const slug = filePath.replace(/\.mdx?$/, "");
   const { data, content } = getPost(slug, isWorks);
-
+  const mdxSource = await serialize(content, {
+    scope: data,
+  });
   const items: Items = {};
 
   // Ensure only the minimal needed data is exposed
@@ -58,8 +62,11 @@ export function getPostItems(
     if (field === "slug") {
       items[field] = slug;
     }
+    if(field === 'mdxContent') {
+      items[field] = mdxSource
+    }
     if (field === "content") {
-      items[field] = content;
+      items[field] = content as any;
     }
 
     if (data[field]) {
@@ -70,14 +77,18 @@ export function getPostItems(
   return items;
 }
 
-export function getAllPosts(fields: string[] = []): {
+export async function getAllPosts(fields: string[] = []): Promise<{
   posts: Items[];
-} {
+}> {
   const filePaths = getPostFilePaths();
-  const posts = filePaths
-    .map((filePath) => getPostItems(filePath, fields))
-    // sort posts by date in descending order
-    .sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
+  const posts = await Promise.all(
+    filePaths.map(async (filePath) => await getPostItems(filePath, fields))
+  );
 
-  return { posts };
+  // sort posts by date in descending order
+  const sortedPosts = posts.sort((post1, post2) =>
+    post1.date > post2.date ? -1 : 1
+  );
+
+  return { posts: sortedPosts };
 }

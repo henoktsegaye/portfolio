@@ -27,14 +27,16 @@ export default function IndexPage({ posts }: Props) {
 }
 
 export const getStaticProps = async ({ locale = "en" }: { locale: "en" }) => {
-  const files = getAllPosts([
+  const files = await getAllPosts([
     "slug",
     "date",
     "thumbnail",
     "title",
     "description",
     "hashtag",
-    "content"
+    "content",
+    "type",
+    "mdxContent"
   ]);
 
   return { props: { posts: files.posts } };

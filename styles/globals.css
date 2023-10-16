@@ -13,7 +13,7 @@
   @apply dark:text-blue-400;
  }
 .blog h2 {
-  @apply text-2xl;
+  font-size: 150%;
   @apply mb-3;
   @apply mt-8;
   @apply font-bold;
@@ -29,7 +29,7 @@
 }
 
 .blog h3 {
-  @apply text-xl;
+  font-size: 120%;
   @apply mt-8;
   @apply mb-3;
   @apply font-bold;
@@ -37,15 +37,37 @@
 
 .blog p,
 body b {
+  font-size: 100%;
   @apply text-gray-800;
   @apply dark:text-gray-300;
-  @apply text-base;
   @apply mt-4;
   @apply mb-4;
 }
 
 .blog strong {
   @apply font-bold;
+}
+.blog ul {
+  @apply list-disc;
+  @apply ml-6;
+}
+
+.blog table {
+  @apply table-auto;
+  @apply mb-4;
+  @apply mt-4;
+}
+
+.blog table td {
+  @apply border;
+  @apply border-gray-200;
+  @apply dark:border-gray-800;
+  @apply p-2;
+}
+
+.blog ol {
+  @apply list-decimal;
+  @apply ml-6;
 }
 
 .blog hr {
@@ -65,4 +87,8 @@ body b {
 }
 .code-block:hover .copy-button {
   @apply opacity-100;
+}
+
+.note {
+  font-size: 100%;
 }

@@ -1,3 +1,5 @@
+import { MDXRemoteSerializeResult } from "next-mdx-remote";
+
 export type Blog = {
   slug: string;
   date: string;
@@ -7,4 +9,6 @@ export type Blog = {
   description: string;
   author: string;
   content: string;
+  mdxContent: MDXRemoteSerializeResult
+  type?: 'memo'
 };

@@ -27,7 +27,7 @@ but we can listen to `unhandledRejection` and `uncaughtException` events to hand
 ```javascript
 // unhandledRejection
 process.on('uncaughtException', (err) => {
-  // ... log the error ...
+  // ... log the error or do any other stuff ...
   process.exit(1);
 });
 
