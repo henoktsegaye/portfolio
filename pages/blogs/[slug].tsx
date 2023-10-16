@@ -155,7 +155,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const { posts } = await getAllPosts(["slug"]);
   const enPaths: returnPath[] = posts.map((post) => ({
     params: {
-      slug: post.slug,
+      slug: post.slug as string,
     },
   }));
 
