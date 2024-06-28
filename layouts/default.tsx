@@ -51,41 +51,55 @@ export default function DefaultLayout({
       <main className=" relative contents ">{children}</main>
       <Divider />
       <footer className="w-full max-w-screen-lg lg:px-0 px-3 py-3 mx-auto ">
-        <h2 className=" font-bold text-2xl mt-4 mb-1"> Tools to use</h2>
-        <p> These are tools I built for myself use them if useful</p>
-        <div className=" mt-8 mb-6 grid-cols-1 gap-4 grid md:grid-cols-4">
-          {Tools.map((el) => (
-            <div
-              key={el.title}
-              className=" py-2 min-w-[230px] px-4 rounded-xl border dark:border-gray-800 bg-gray-100 dark:bg-gray-800 border-gray-200 "
-            >
-              <p className="text-lg font-bold mb-4"> {el.title} </p>
-              <p className=" text-xs mb-6 h-20 ">{el.description}</p>
-
-              {el.link && (
-                <Link target="_blank" href={el.link}>
-                  <Button
-                    variant="light"
-                    type="button"
-                    color="primary"
-                    size="lg"
-                    endContent={
-                      <ExternalLinkIcon
-                        fill="currentColor"
-                        color="primary"
-                        width="14px"
-                        height="14px"
-                      />
-                    }
-                  >
-                    Open
-                  </Button>
-                </Link>
-              )}
-            </div>
-          ))}
-        </div>
-      </footer>
+        <ToolsToUse />
+          </footer>
     </div>
   );
+}
+
+
+// TODO: decide the format ( and text , I want to say if you need review , consulting ,need developer to work on a project)
+function ContactMe() {
+
+}
+
+function ToolsToUse() {
+  return (   
+    <div className="flex flex-col"> 
+    <h2 className=" font-bold text-2xl mt-4 mb-1"> Tools to use</h2>
+    <p> These are tools I built for myself use them if useful</p>
+    <div className=" mt-8 mb-6 grid-cols-1 gap-4 grid md:grid-cols-4">
+      {Tools.map((el) => (
+        <div
+          key={el.title}
+          className=" py-2 min-w-[230px] px-4 rounded-xl border dark:border-gray-800 bg-gray-100 dark:bg-gray-800 border-gray-200 "
+        >
+          <p className="text-lg font-bold mb-4"> {el.title} </p>
+          <p className=" text-xs mb-6 h-20 ">{el.description}</p>
+
+          {el.link && (
+            <Link target="_blank" href={el.link}>
+              <Button
+                variant="light"
+                type="button"
+                color="primary"
+                size="lg"
+                endContent={
+                  <ExternalLinkIcon
+                    fill="currentColor"
+                    color="primary"
+                    width="14px"
+                    height="14px"
+                  />
+                }
+              >
+                Open
+              </Button>
+            </Link>
+          )}
+        </div>
+      ))}
+    </div>
+    </div>
+)
 }

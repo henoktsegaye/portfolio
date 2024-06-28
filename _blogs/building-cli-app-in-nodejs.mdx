@@ -1,22 +1,21 @@
 ---
 date: "2023-05-15"
 thumbnail: /assets/blog/cli-cover-img.png
-title: Building a Cli app with Node.js
-description: Cli app is a great way for developers and technical people to interact with your application. In this article, we will learn how to build a cli app with Node.js
+title: Building a CLI app with Node.js
+description: A CLI app is a great way for developers and technical people to interact with your application. In this article, we will learn how to build a CLI app with Node.js.
 hashtag: Node.js
 author: Henok Tsegaye
 ---
-In this blog we are going to build a simple Cli app that lists files in a directory and shows the content of a file in that directory. We will use Node.js to build this app. 
-The aim of this blog is to show how we can intract with the console and output the result to the console.
+In this blog, we are going to build a simple CLI app that lists files in a directory and shows the content of a file in that directory. We will use Node.js to build this app. The aim of this blog is to show how we can interact with the console and output the result to the console.
 
 ### Prerequisites
 - Node.js
-- npm or pnpm ( I am using pnpm in this blog)
+- npm or pnpm (I am using pnpm in this blog)
 - git
 
 ### Getting started
 
-To help us get started faster we are going to clone a starter project from Github that supports typescript and eslint.
+To help us get started faster, we are going to clone a starter project from GitHub that supports TypeScript and ESLint.
 ```bash
 git clone git@github.com:henoktsegaye/node-ts-starter.git
 ```
@@ -25,12 +24,11 @@ git clone git@github.com:henoktsegaye/node-ts-starter.git
 ```bash
 pnpm install
 ```
-When running node on the terminal, anything passed while executing the file could be accessed from the `process.argv` array. The first element of the array is the path to the node executable while the second element is the path to the file that is being executed, the rest of the elements in the array are the arguments passed to the file. 
-For example, if we run the following command on the terminal.
+When running node on the terminal, anything passed while executing the file could be accessed from the `process.argv` array. The first element of the array is the path to the node executable while the second element is the path to the file that is being executed; the rest of the elements in the array are the arguments passed to the file. For example, if we run the following command on the terminal:
 ```bash
 node index.js --version
 ```
-The `process.argv` array will look like something like this
+The `process.argv` array will look like something like this:
 ```js
 [
     '/usr/local/bin/node', // path to the node executable
@@ -38,7 +36,7 @@ The `process.argv` array will look like something like this
     '--version' // arguments passed to the file
 ]
 ```
-We can use this array to access the arguments passed and parse the arguments passed to do whatever we wanted to do( based on the arguments passed). For example, if we want to print the version of the app we can do something like this
+We can use this array to access the arguments passed and parse the arguments passed to do whatever we wanted to do (based on the arguments passed). For example, if we want to print the version of the app we can do something like this:
 ```js
 if (process.argv.includes('--version')) {
     console.log('0.0.1');
@@ -46,44 +44,41 @@ if (process.argv.includes('--version')) {
 ```
 
 ### Using npm packages
-Using the `process.argv` array to parse the arguments passed to the file could be a bit slow and tedious and error prone if we have a lot of arguments to parse.
+Using the `process.argv` array to parse the arguments passed to the file could be a bit slow, tedious, and error-prone if we have a lot of arguments to parse.
 ![Slow process](https://media.giphy.com/media/OocLVILtd7ybm/giphy.gif)
-There are a couple of great npm packages that could actually help us write this cli app faster but we could choose not to use those packages and write our own parser instead.
- In this blog we are going to use some of this packages anyway to help us write this app faster.
+There are a couple of great npm packages that could actually help us write this CLI app faster, but we could choose not to use those packages and write our own parser instead. In this blog, we are going to use some of these packages anyway to help us write this app faster.
 
-Here are a couple of packages that we are going to use in this blog
+Here are a couple of packages that we are going to use in this blog:
 
-- [commander](https://www.npmjs.com/package/commander) - help us to build a command line interface
-- [chalk](https://www.npmjs.com/package/chalk) - help us to style the output to the console
-- [inquirer](https://www.npmjs.com/package/inquirer) - help us to build interactive command line interface
+- [commander](https://www.npmjs.com/package/commander) - helps us to build a command line interface
+- [chalk](https://www.npmjs.com/package/chalk) - helps us to style the output to the console
+- [inquirer](https://www.npmjs.com/package/inquirer) - helps us to build interactive command line interfaces
 
-Once we have installed dependencies from the starter project , we can start to install our own dependencies.
+Once we have installed dependencies from the starter project, we can start to install our own dependencies.
 ```bash
 pnpm install commander chalk inquirer
 ```
 
 ### Building the app
 
-A CLI app is different in the way that the user interacts with the app, there is no UI or nice interface the user could click around. Instead users have to type commands to do everything , to even get help. `Commander.js` could actually help us on this. Commander handles parsing input from the command line that the user types and helps us to define custom commands and options for our app.
+A CLI app is different in the way that the user interacts with the app; there is no UI or nice interface the user could click around. Instead, users have to type commands to do everything, even to get help. `Commander.js` could actually help us with this. Commander handles parsing input from the command line that the user types and helps us to define custom commands and options for our app.
 Let's see this in action.
-First let's start by creating a program from commander
+First, let's start by creating a program from commander:
 ```ts
 import { Command } from 'commander';
 
 const program = new Command();
 ```
 
-We created a program instance from commander. now we can start to define commands and options for our app.
+We created a program instance from commander. Now we can start to define commands and options for our app.
 Let's start by defining a version for our app and a description.
 
 ```ts
-
-program.
-version('0.0.1').
-description('A simple cli app that lists and shows the content of a directory');
-
+program
+.version('0.0.1')
+.description('A simple CLI app that lists and shows the content of a directory');
 ```
-Now that we have the basics we can call `parse` method on the program instance to parse the input from the command line and pass `process.argv`.
+Now that we have the basics, we can call the `parse` method on the program instance to parse the input from the command line and pass `process.argv`.
 ```ts
 program.parse(process.argv);
 ```
@@ -93,17 +88,16 @@ pnpm run dev --version
 
 # output 0.0.1
 ```
-Now let's define an option that lists the content of a directory. we can do that by calling the `option` method on the program object.
+Now let's define an option that lists the content of a directory. We can do that by calling the `option` method on the program object.
 ```ts
-program.
-version('0.0.1').
-description('A simple cli app that lists and shows the content of a directory').
-option('-l, --list', 'list the content of a directory').
-option('-s, --show <path>', 'show the content of a file').
-parse(process.argv);
-
+program
+.version('0.0.1')
+.description('A simple CLI app that lists and shows the content of a directory')
+.option('-l, --list', 'list the content of a directory')
+.option('-s, --show <path>', 'show the content of a file')
+.parse(process.argv);
 ```
-Now that we have defined the options for the CLI app, we can start to implement the logic for each option. 
+Now that we have defined the options for the CLI app, we can start to implement the logic for each option.
 ```ts
 import fs from 'fs';
 import chalk from 'chalk';
@@ -112,54 +106,60 @@ import chalk from 'chalk';
 
 const options = program.opts();
 
-// if the list option is passed  we list the content of the directory
+// if the list option is passed, we list the content of the directory
 if (options.list) {
-    fs.readdir(process.cwd(), {withFileTypes: true} ,(err, files) => {
-     if (err) {
-        console.log(err);
-        return;
-    }
-
-    const fileList = files.map((file) => {
-        if (file.isDirectory()) { 
-            return {name:`📂 ${file.name}` , type: 'directory'}
+    fs.readdir(process.cwd(), { withFileTypes: true }, (err, files) => {
+        if (err) {
+            console.log(err);
+            return;
         }
-        return {name:`📄 ${fileList}` , type: 'file'}
-    });
 
-    fileList.forEach((file) => {
-        if (file.type === 'directory') {
-        console.log(chalk.blue(file.name));
-        } else {
-        console.log(chalk.green(file.name));
-        }
-    });
+        const fileList = files.map((file) => {
+            if (file.isDirectory()) {
+                return { name: `📂 ${file.name}`, type: 'directory' };
+            }
+            return { name: `📄 ${file.name}`, type: 'file' };
+        });
 
+        fileList.forEach((file) => {
+            if (file.type === 'directory') {
+                console.log(chalk.blue(file.name));
+            } else {
+                console.log(chalk.green(file.name));
+            }
+        });
+    });
 }
+
 const readFile = (path) => {
-  fs.readFile(path, "utf-8", (err, data) => {
-    if (err) {
-      console.log(chalk.red("Error", err.message));
-      return;
-    }
-    console.log(data);
-  });
+    fs.readFile(path, "utf-8", (err, data) => {
+        if (err) {
+            console.log(chalk.red("Error", err.message));
+            return;
+        }
+        console.log(data);
+    });
 }
 
-// if the show option is passed we show the content of the file
-if(options.show) {
-  readFile(`${process.cwd()}/${options.show}`)
+// if the show option is passed, we show the content of the file
+if (options.show) {
+    readFile(`${process.cwd()}/${options.show}`);
 }
 ```
+In this code snippet:
+-	`fs.readdir(process.cwd(), { withFileTypes: true }, (err, files) => {...})`: This reads the contents of the current working directory. The withFileTypes: true option ensures that the resulting files array includes file type information.
+-	The `fileList` array is constructed to store file names with their respective icons (folders and files).
+-	The `forEach` loop iterates over the fileList and prints each file or directory name in color-coded output using chalk.
+- `fs.readFile(path, "utf-8", (err, data) => {...})`: This reads the file at the specified path. The utf-8 encoding ensures the file is read as a string.
+-	The `if (err)` block handles errors, such as the file not being found, and prints a red error message using chalk.
 Now we can run our app and see the result.
 ```bash
 pnpm run dev --list
 pnpm run dev --show README.md
-
 ```
-Pretty neat right? its easy as that!
-But Wait there is more.
-Now that we have the basics. we want to add a prompt on the `--list` option to ask the user to select a directory / file to show the content of the directory / file.
+Pretty neat, right? It's as easy as that!
+But wait, there is more.
+Now that we have the basics, we want to add a prompt on the `--list` option to ask the user to select a directory/file to show the content of the directory/file.
 Let's see this in action.
 ```ts
 import fs from 'fs';
@@ -170,57 +170,86 @@ const options = program.opts();
 
 // Previous code here ...
 
-// separate the logic for reading a file to a function ( make this easier to read / test)
+// separate the logic for reading a file to a function (make this easier to read/test)
 const readDirectoryFiles = (path: string) => {
-  fs.readdir(path, { withFileTypes: true }, (err, files) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-
-    const fileList = files.map((file) => {
-      if (file.isDirectory()) {
-        return `📂 ${file.name}`;
-      }
-      return `📄 ${file.name}`;
-    });
-    inquirer
-      .prompt([
-        {
-          type: "list",
-          name: "file",
-          message: "Select a file to show the content",
-          choices: fileList,
-        },
-      ])
-       .then((answers) => {
-        const file = answers.file;
-        if (file.startsWith("📂")) {
-          return readDirectoryFiles(`${path}${file.replace("📂 ", "/")}`);
+    fs.readdir(path, { withFileTypes: true }, (err, files) => {
+        if (err) {
+            console.log(err);
+            return;
         }
-        console.log(chalk.green(file));
-        readFile(`${path}${file.replace("📄 ", "/")}`);
-      });
-  });
+
+        const fileList = files.map((file) => {
+            if (file.isDirectory()) {
+                return `📂 ${file.name}`;
+            }
+            return `📄 ${file.name}`;
+        });
+
+        inquirer
+            .prompt([
+                {
+                    type: "list",
+                    name: "file",
+                    message: "Select a file to show the content",
+                    choices: fileList,
+                },
+            ])
+            .then((answers) => {
+                const file = answers.file;
+                if (file.startsWith("📂")) {
+                    return readDirectoryFiles(`${path}/${file.replace("📂 ", "")}`);
+                }
+                console.log(chalk.green(file));
+                readFile(`${path}/${file.replace("📄 ", "")}`);
+            });
+    });
 };
 
-
-// if the list option is passed  we list the content of the directory
-if(options.list) {
+// if the list option is passed, we list the content of the directory
+if (options.list) {
     readDirectoryFiles(process.cwd());
 }
 ```
-In this new way we should be able to iterate over directories to list files and select files to view the content.
+In the above code
+
+1.Mapping Files and Directories:
+
+  - `const fileList = files.map((file) => {...})`: This part of the code maps through the files array obtained from `fs.readdir` and creates a new array called `fileList`. Each file or directory is prefixed with an icon (📂 for directories and 📄 for files) to visually distinguish them in the prompt.
+
+
+2.Prompting the User:
+
+
+  -	`inquirer.prompt([...]).then((answers) => {...})`: The `inquirer.prompt` method is used to display a prompt to the user. The prompt method takes an array of questions, and each question is an object. Here, we have one question:
+  -	type: "list": This specifies that the input type is a list, which will display a list of choices for the user to select from.
+  -	name: "file": This assigns a name to the answer. The answer can be accessed using this name.
+  -	message: "Select a file to show the content": This is the message displayed to the user.
+  -	choices: `fileList`: This provides the list of choices that the user can select from, which we created earlier.
+
+
+
+3.Handling User Selection:
+
+
+  -	`then((answers) => {...})`: Once the user makes a selection, the .then method is called with the answers object, which contains the user’s selection.
+  -	`const file = answers.file;`: This extracts the selected file or directory from the answers object.
+  -	`if (file.startsWith("📂")) {...}`: This checks if the selected item is a directory (starts with 📂). If it is, the function calls readDirectoryFiles recursively with the new path to list the contents of the selected directory.
+  -	`console.log(chalk.green(file));`: If the selected item is a file, it logs the file name in green using chalk.
+  -	`readFile(${path}/${file.replace(“📄 “, “”)});`: This calls the readFile function to read and display the content of the selected file, removing the 📄 prefix from the file name.
+
+
+In this new way, we should be able to iterate over directories to list files and select files to view the content.
 We can run our app and see the result.
+
 ```bash
 pnpm run dev --list
 ```
-You should see something like this
+You should see something like this:
 ![list](/assets/blog/folder-list.png)
 
 Now you can navigate through the directories and select a file to view the content.
 
 ### Conclusion
 
-In this blog we have learned how to build a simple CLI app with Node.js. We have learned how to use commander to define commands and options for our app. We have also learned how to use chalk to style the output to the console and inquirer to build interactive command line interface.
-you can find the source code for this blog [here](https://github.com/henoktsegaye/file-viewer)
+In this blog, we have learned how to build a simple CLI app with Node.js. We have learned how to use commander to define commands and options for our app. We have also learned how to use chalk to style the output to the console and inquirer to build interactive command line interfaces. You can find the source code for this blog [here](https://github.com/henoktsegaye/file-viewer).
+ 
