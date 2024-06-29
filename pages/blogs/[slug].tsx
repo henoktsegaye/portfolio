@@ -16,6 +16,15 @@ import { ReactNode } from "react";
 import { config } from "process";
 import { siteConfig } from "@/config/site";
 import { useRouter } from "next/router";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  useDisclosure,
+} from "@nextui-org/react";
 
 interface returnPath {
   params: {
@@ -30,6 +39,8 @@ type Props = {
 };
 
 const PostPage: React.FC<Props> = ({ slug, source, frontMatter }: Props) => {
+  const { onOpenChange, onOpen, isOpen } = useDisclosure();
+
   const router = useRouter();
   const host = process.env.NEXT_PUBLIC_HOST;
   return (
@@ -58,8 +69,24 @@ const PostPage: React.FC<Props> = ({ slug, source, frontMatter }: Props) => {
         />
       }
     >
+      <Modal size="2xl"  isOpen={isOpen} onClose={onOpenChange}>
+        <ModalContent>
+          <ModalHeader className="flex flex-col gap-1">
+            Send message{" "}
+          </ModalHeader>
+          <ModalBody>
+            <iframe
+              src="https://docs.google.com/forms/d/e/1FAIpQLSfq4ZfNd3iSTmfbQfPtcpn8fanFfcRrbAvNPM0kVFhfEKjDLw/viewform?embedded=true"
+              width="100%"
+              height="861"
+             >
+              Loading...
+            </iframe>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
       <div
-        className="  border-b dark:border-gray-800  w-full   "
+        className="border-b dark:border-gray-800  w-full   "
         style={{
           backgroundImage: `url(${frontMatter?.thumbnail})`,
           backgroundSize: "cover",
@@ -88,16 +115,55 @@ const PostPage: React.FC<Props> = ({ slug, source, frontMatter }: Props) => {
           </div>
         </div>
       </div>
-      <div className="lg:max-w-screen-lg max-w-sm mx-auto pb-10">
-        <Content source={source} className="mt-10" />
+      <div className="lg:max-w-screen-lg xl:max-w-screen-xl max-w-sm relative mx-auto flex pb-10">
+        <Content source={source} className="mt-10  w-9/12 pr-2" />
+
+        <div className="sticky h-[200px] mt-9  top-20  w-3/12 ">
+          <div className=" border top-10 border-gray-200 dark:border-gray-800 p-3 rounded-md ">
+            <p className="text-medium font-bold  ">Hello fellow developer 👋🏾</p>
+            <hr className="border-gray-200 dark:border-gray-700  my-3" />
+
+            <p className="text-xs ">
+              Looking for expert assistance with your web application
+              development or code review?
+            </p>
+            <p className="text-xs  mb-3 ">
+              Feel free to send me a message or email to discuss your specific
+              needs
+            </p>
+            <hr className="border-gray-200 dark:border-gray-700  my-3" />
+
+            <div className="flex gap-3 justify-end">
+              <a className="email-me" href="mailto:maxhenock@gmail.com">
+                <Button variant="light">Email me</Button>
+              </a>
+              <Button
+                onClick={onOpen}
+                color="primary"
+                className="send-message"
+                variant="light"
+                data-modal-target="default-modal"
+                data-modal-toggle="default-modal"
+              >
+                Send message
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
     </DefaultLayout>
   );
 };
 
-export function Content({ source , className}: { source: MDXRemoteSerializeResult, className?: string }) {
+export function Content({
+  source,
+  className,
+}: {
+  source: MDXRemoteSerializeResult;
+  className?: string;
+}) {
   return (
-    <article className={`prose  prose-blue  ${className ?? ''} `}>
+    <article className={`prose  prose-blue  ${className ?? ""} `}>
       <div className="  blog dark:border-gray-900">
         <MDXRemote
           components={{

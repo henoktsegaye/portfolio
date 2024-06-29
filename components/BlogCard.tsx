@@ -16,7 +16,7 @@ const BlogCard = ({ blog }: BlogCardProps) => {
   const { title, type, mdxContent, description, slug, date, content } = blog;
   const mins = predictReadMinutes(content);
   return (
-    <div className=" px-2 overflow-hidden pb-2 h-50 relative border rounded-xl border-gray-200 dark:border-gray-800">
+    <div className=" px-2  overflow-hidden pb-2 h-50 relative border rounded-xl border-gray-200 dark:border-gray-800">
        {type === 'memo' && (
           <div className="absolute  top-0 right-0 ">
             <div className="bg-green-500 dark:bg-green-500  px-4 py-1" >
@@ -35,7 +35,7 @@ const BlogCard = ({ blog }: BlogCardProps) => {
         }}
       >
        
-        <div className="  bg-gray  rounded-xl  px-4 col-span-6  flex flex-col justify-between pr-4 ">
+        <div className="  bg-gray  rounded-xl  px-4 col-span-6  flex flex-col justify-between pr-4 pb-10 ">
           <div>
             {!type && (
               <Image
