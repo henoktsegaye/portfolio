@@ -28,6 +28,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               gtag('config', 'G-8LFFV6MN7W');
           `}
         </Script>
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-KQCGNP8H"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          ></iframe>
+        </noscript>
         <Component {...pageProps} />
       </NextThemesProvider>
     </NextUIProvider>
