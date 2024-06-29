@@ -58,11 +58,7 @@ export default function DefaultLayout({
 }
 
 
-// TODO: decide the format ( and text , I want to say if you need review , consulting ,need developer to work on a project)
-function ContactMe() {
-
-}
-
+ 
 function ToolsToUse() {
   return (   
     <div className="flex flex-col"> 

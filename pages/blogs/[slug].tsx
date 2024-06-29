@@ -134,13 +134,13 @@ const PostPage: React.FC<Props> = ({ slug, source, frontMatter }: Props) => {
             <hr className="border-gray-200 dark:border-gray-700  my-3" />
 
             <div className="flex gap-3 justify-end">
-              <a className="email-me" href="mailto:maxhenock@gmail.com">
+              <a id="email-me" href="mailto:maxhenock@gmail.com">
                 <Button variant="light">Email me</Button>
               </a>
               <Button
                 onClick={onOpen}
                 color="primary"
-                className="send-message"
+                id="send-message"
                 variant="light"
                 data-modal-target="default-modal"
                 data-modal-toggle="default-modal"
