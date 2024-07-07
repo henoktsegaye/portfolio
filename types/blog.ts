@@ -9,6 +9,7 @@ export type Blog = {
   description: string;
   author: string;
   content: string;
+  canonical?: string;
   mdxContent: MDXRemoteSerializeResult
   type?: 'memo'
 };

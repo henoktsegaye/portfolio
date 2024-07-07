@@ -66,6 +66,7 @@ const PostPage: React.FC<Props> = ({ slug, source, frontMatter }: Props) => {
 
             siteName: siteConfig.name,
           }}
+          canonical={frontMatter.canonical ?`${host}${frontMatter.canonical}`:undefined}
         />
       }
     >
