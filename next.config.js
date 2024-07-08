@@ -9,13 +9,7 @@ const withMDX = require("@next/mdx")({
     // If you use `MDXProvider`, uncomment the following line.
     // providerImportSource: "@mdx-js/react",
   },
-  redirects() {
-    return [{
-      source: '/blogs/handling-error-in-nodejs',
-      destination: '/blogs/handling-error-in-express-typescript',
-      permanent: true,
-    }]
-  }
+
 });
 
 /** @type {import('next').NextConfig} */
@@ -49,6 +43,13 @@ const nextConfig = {
   },
   pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
   reactStrictMode: true,
+  async redirects() {
+    return [{
+      source: '/blogs/handling-error-in-nodejs',
+      destination: '/blogs/handling-error-in-express-typescript',
+      permanent: true,
+    }]
+  }
 };
 
 module.exports = withMDX(nextConfig);
