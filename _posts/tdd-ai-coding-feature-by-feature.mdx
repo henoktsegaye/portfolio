@@ -1,0 +1,326 @@
+---
+date: "2026-03-02"
+thumbnail: "/assets/blog/tdd-ai-coding-cover.png"
+title: "TDD + AI Coding: Build Features, Not One-Shot Apps"
+description: "The practical workflow I use with AI to ship reliable features with Red-Green-Refactor instead of prompting for a full app in one shot."
+hashtag: "Node.js, ai"
+author: "Henok Tsegaye"
+---
+
+# TDD + AI Coding: Build Features, Not One-Shot Apps
+
+AI is powerful, but **one-shot app prompts** are still one of the fastest ways to create messy code.
+
+If you ask AI to "build the whole app", it will usually give you:
+
+- code that looks finished but is brittle,
+- inconsistent architecture,
+- weak edge-case handling,
+- no confidence when you start changing things.
+
+The better path is to combine AI with **TDD**.
+
+## The idea in one sentence
+
+Use AI as a fast coding partner, but keep TDD in charge:
+
+1. Write a failing test (**Red**)
+2. Implement the smallest code to pass (**Green**)
+3. Improve design without changing behavior (**Refactor**)
+
+Repeat this per feature.
+
+Not per app.
+
+## Why this works better than one-shot generation
+
+TDD gives you:
+
+- a safety net to change code,
+- smaller and clearer design decisions,
+- confidence while refactoring,
+- a predictable way to collaborate with AI.
+
+AI gives you:
+
+- speed in implementation,
+- quick alternatives,
+- boilerplate reduction,
+- faster test authoring.
+
+Together, you get speed **and** reliability.
+
+---
+
+## A practical example: Todo feature (Node.js + TypeScript)
+
+Let's build one feature at a time.
+
+### Requirement (small and clear)
+
+We start with one behavior only:
+
+`createTodo(title)` should:
+
+- trim whitespace,
+- reject empty titles,
+- reject titles longer than 120 chars,
+- return a todo object with default `completed: false`.
+
+### Step 1: Red (failing test first)
+
+```ts
+// todo.service.test.ts
+import { describe, it, expect } from "vitest";
+import { createTodo } from "./todo.service";
+
+describe("createTodo", () => {
+  it("creates a todo with normalized title", () => {
+    const todo = createTodo("  Learn TDD  ");
+
+    expect(todo.title).toBe("Learn TDD");
+    expect(todo.completed).toBe(false);
+    expect(todo.id).toBeDefined();
+  });
+
+  it("throws for empty title", () => {
+    expect(() => createTodo("   ")).toThrow("Title is required");
+  });
+
+  it("throws when title is too long", () => {
+    const longTitle = "a".repeat(121);
+    expect(() => createTodo(longTitle)).toThrow("Title is too long");
+  });
+});
+```
+
+Now tests fail because `createTodo` doesn't exist yet. Perfect.
+
+### Step 2: Green (minimum code)
+
+```ts
+// todo.service.ts
+export type Todo = {
+  id: string;
+  title: string;
+  completed: boolean;
+};
+
+export const createTodo = (rawTitle: string): Todo => {
+  const title = rawTitle.trim();
+
+  if (!title) {
+    throw new Error("Title is required");
+  }
+
+  if (title.length > 120) {
+    throw new Error("Title is too long");
+  }
+
+  return {
+    id: crypto.randomUUID(),
+    title,
+    completed: false,
+  };
+};
+```
+
+Tests pass. We are green.
+
+### Step 3: Refactor (without behavior change)
+
+Now ask AI to refactor safely.
+
+Prompt example:
+
+```txt
+Refactor this file for readability and single-responsibility.
+Keep behavior exactly the same.
+Do not change public API.
+Do not change test expectations.
+```
+
+Possible refactor result:
+
+```ts
+const MAX_TITLE_LENGTH = 120;
+
+const normalizeTitle = (value: string) => value.trim();
+
+const validateTitle = (title: string) => {
+  if (!title) throw new Error("Title is required");
+  if (title.length > MAX_TITLE_LENGTH) throw new Error("Title is too long");
+};
+
+export const createTodo = (rawTitle: string): Todo => {
+  const title = normalizeTitle(rawTitle);
+  validateTitle(title);
+
+  return {
+    id: crypto.randomUUID(),
+    title,
+    completed: false,
+  };
+};
+```
+
+Run tests again. If green, refactor is safe.
+
+---
+
+## Add a second feature, still TDD-first
+
+New behavior: `completeTodo(todo)` marks the todo complete.
+
+### Red
+
+```ts
+it("marks a todo as completed", () => {
+  const todo = createTodo("Write tests");
+  const updated = completeTodo(todo);
+
+  expect(updated.completed).toBe(true);
+  expect(updated.title).toBe(todo.title);
+});
+```
+
+### Green
+
+```ts
+export const completeTodo = (todo: Todo): Todo => ({
+  ...todo,
+  completed: true,
+});
+```
+
+### Refactor
+
+No unnecessary refactor needed? Skip it.
+
+This matters.
+
+TDD is not "always refactor." It's "refactor when it improves design."
+
+---
+
+## How I use AI in each TDD phase
+
+### During Red
+
+Use AI to generate test cases, but keep requirement control.
+
+Prompt:
+
+```txt
+Given this requirement, propose edge-case tests only.
+Do not implement production code.
+```
+
+### During Green
+
+Ask for minimal implementation.
+
+Prompt:
+
+```txt
+Implement the smallest code to pass these tests.
+No extra abstractions.
+```
+
+### During Refactor
+
+Ask for safe structural cleanup.
+
+Prompt:
+
+```txt
+Refactor for readability and maintainability.
+Keep API and test behavior unchanged.
+```
+
+### During review
+
+Use AI like a reviewer.
+
+Prompt:
+
+```txt
+Review this diff for:
+1) hidden coupling,
+2) missing edge-case tests,
+3) naming issues,
+4) over-engineering.
+```
+
+---
+
+## The "don't one-shot" rule
+
+When you one-shot, you skip design feedback loops.
+
+Instead do this:
+
+1. Pick one feature slice
+2. Define expected behavior
+3. Write failing tests
+4. Implement minimum code
+5. Refactor
+6. Commit
+7. Start next slice
+
+This keeps complexity flat while your app grows.
+
+---
+
+## A feature-slice plan for a real app
+
+If I were building a notes app, I would not prompt:
+
+> "Build a complete notes app with auth, search, folders, and sync"
+
+I would slice like this:
+
+1. Create note
+2. Update note title/body
+3. Delete note
+4. List notes
+5. Search notes
+6. Add auth guards
+7. Add optimistic UI + rollback
+
+Each one gets its own Red-Green-Refactor cycle.
+
+---
+
+## What changes in team velocity?
+
+At first, TDD feels slower.
+
+Then your speed compounds because:
+
+- fewer regressions,
+- cleaner refactors,
+- easier onboarding,
+- confidence to ship fast.
+
+AI boosts this even more because you spend less time typing and more time deciding.
+
+---
+
+## Final take
+
+AI should not replace engineering discipline.
+
+It should amplify it.
+
+So if you want reliable output from AI coding:
+
+**Don’t one-shot an app.**
+
+Build feature by feature.
+Write failing tests.
+Get to green.
+Refactor safely.
+Repeat.
+
+That is where real velocity comes from.

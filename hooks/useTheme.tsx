@@ -24,7 +24,7 @@ const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
   const setTheme = useCallback(() => {
     const storedTheme = localStorage.getItem(THEME_CONST);
-    const foundTheme = storedTheme ?? (isBrowserSchemeDark() ? DARK : LIGHT);
+    const foundTheme = storedTheme ?? DARK;
     setDarkTheme(foundTheme === DARK);
   }, [setDarkTheme, isDark]);
   useEffect(() => {

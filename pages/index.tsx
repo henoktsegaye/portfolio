@@ -8,6 +8,7 @@ import { BlogHeader } from "../components/blog/blogHeader";
 import { BlogCard } from "../components/blog/BlogCard";
 import { BlogNav } from "../components/blog/blogNav";
 import { Text } from "../components/basic/genial/text";
+import { TerminalPanel } from "../components/basic/ui";
 import Footer from "../components/layout/footer";
 import Meta from "../components/layout/meta";
 
@@ -23,11 +24,24 @@ type Props = {
 const Home: React.FC<Props> = ({ files, localeString, locale }) => {
   const { posts } = files;
   const { footer, general, socialMedia } = localeString;
+  const normalizeTag = (value?: string) => (value ?? "").trim();
+  const splitTags = (value?: string) =>
+    normalizeTag(value)
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter(Boolean);
 
   const tags = useMemo(
-    () => new Set(posts.map((el) => el.hashtag.split(" ")).flat()),
+    () =>
+      new Set(
+        posts
+          .flatMap((el) => splitTags(el.hashtag))
+          .filter(Boolean)
+          .sort((tagA, tagB) => tagA.localeCompare(tagB))
+      ),
     [posts]
   );
+  const tagsList = useMemo(() => Array.from(tags), [tags]);
 
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [search, setSearch] = useState<string>("");
@@ -35,7 +49,7 @@ const Home: React.FC<Props> = ({ files, localeString, locale }) => {
   const selectedPostsByTag = useMemo(
     () =>
       activeTag
-        ? posts.filter((el) => el.hashtag.split(" ").includes(activeTag))
+        ? posts.filter((el) => splitTags(el.hashtag).includes(activeTag))
         : posts,
     [activeTag, posts]
   );
@@ -50,7 +64,7 @@ const Home: React.FC<Props> = ({ files, localeString, locale }) => {
   );
 
   return (
-    <div className=" h-full w-full ">
+    <div className="min-h-screen w-full bg-white dark:bg-black">
       <Meta
         socialMedia={socialMedia}
         siteString={{
@@ -60,35 +74,34 @@ const Home: React.FC<Props> = ({ files, localeString, locale }) => {
         title="homepage"
       />
       <BlogNav />
-      <div>
-        <div className="  h-full flex flex-col  w-full   ">
-          <div className="py-10 mt-6 max-w-screen-lg  2xl:max-w-screen-xl px-4 lg:px-0 mx-auto relative w-full">
-            <div className="grid grid-cols-12 gap-2 ">
-              <div className="my-6 col-span-12 ">
-                <BlogHeader
-                  tags={["All", ...tags]}
-                  search={search}
-                  onSearchChange={setSearch}
-                  activeTag={activeTag ?? "All"}
-                  onTagChange={(tag: string) =>
-                    setActiveTag(tag !== "All" ? tag : null)
-                  }
-                />
-                <div className="grid 2xl:grid-cols-1 grid-cols-1 lg:grid-cols-1 gap-2">
-                  <AnimatePresence>
-                    {selectedPosts.length === 0 && (
-                      <Text size="xl">No results Found </Text>
-                    )}
-                    {selectedPosts.map((el, index) => (
-                      <BlogCard blog={el} />
-                    ))}
-                  </AnimatePresence>
-                </div>
-              </div>
-            </div>
+      <main className="mx-auto w-full max-w-screen-lg px-4 pb-14 pt-24 lg:px-0">
+        <TerminalPanel>
+          <div className="mb-4 flex justify-end">
+            <p className="font-mono text-xs uppercase tracking-wider text-black dark:text-white">
+              {selectedPosts.length} posts
+            </p>
           </div>
-        </div>
-      </div>
+          <BlogHeader
+            tags={["All", ...tagsList]}
+            search={search}
+            onSearchChange={setSearch}
+            activeTag={activeTag ?? "All"}
+            onTagChange={(tag: string) => setActiveTag(tag !== "All" ? tag : null)}
+          />
+          <div className="grid grid-cols-1 gap-3">
+            <AnimatePresence>
+              {selectedPosts.length === 0 && (
+                <Text size="xl" className="text-black dark:text-white">
+                  No results found.
+                </Text>
+              )}
+              {selectedPosts.map((el) => (
+                <BlogCard key={el.slug} blog={el} />
+              ))}
+            </AnimatePresence>
+          </div>
+        </TerminalPanel>
+      </main>
       <Footer footer={footer} socialMedia={socialMedia} />
     </div>
   );

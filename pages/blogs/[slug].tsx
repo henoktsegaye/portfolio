@@ -1,13 +1,10 @@
 // pages/blogs/[slug].tsx
-import { useState, useEffect, ReactNode } from "react";
-import { GetStaticProps, GetStaticPaths } from "next";
+import { GetStaticPaths } from "next";
 import { serialize } from "next-mdx-remote/serialize";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import ImageBox from "../../components/basic/imageBox";
 import CodeAndImageBox from "../../components/basic/CodeAndImageBox";
 import { Code } from "../../components/basic/code";
-import Layout from "../../components/layout/layout";
-import Featured from "../../components/basic/featured";
 import { IPost } from "../../types/post";
 import { getPost, getAllPosts } from "../../lib/mdxUtils";
 import Footer from "../../components/layout/footer";
@@ -15,9 +12,9 @@ import LanguageStrings, { langType } from "../../lib/lang";
 import Link from "next/link";
 import { BlogNav } from "../../components/blog/blogNav";
 import { useTheme } from "../../hooks/useTheme";
-import { format } from "date-fns";
-import { Text } from "../../components/basic/genial/text";
+import { format, isValid } from "date-fns";
 import Meta from "../../components/layout/meta";
+import { TerminalPanel } from "../../components/basic/ui";
 
 interface returnPath {
   params: {
@@ -34,14 +31,12 @@ type Props = {
   slug: string;
 };
 
-const PostPage: React.FC<Props> = ({
-  source,
-  frontMatter,
-  localeString,
-  locale,
-  slug,
-}: Props) => {
-  const { isDark, toggleTheme } = useTheme();
+const PostPage: React.FC<Props> = ({ source, frontMatter, localeString }: Props) => {
+  const { isDark } = useTheme();
+  const parsedDate = new Date(frontMatter?.date);
+  const publishedDate = isValid(parsedDate)
+    ? format(parsedDate, "MMM do yyyy")
+    : "Unknown date";
 
   const { footer, general, socialMedia } = localeString;
   const components = {
@@ -53,15 +48,15 @@ const PostPage: React.FC<Props> = ({
     inlineCode: (props: { className: string; children: string }) => (
       <code
         {...props}
-        className={`${
-          !isDark ? "bg-gray-50" : "bg-gray-800"
-        } px-3 py-1 rounded ${props.className}`}
+        className={`${!isDark ? "bg-gray-100" : "bg-gray-800"} px-3 py-1 rounded ${
+          props.className
+        }`}
       />
     ),
     Link: Link,
   };
   return (
-    <>
+    <div className="min-h-screen w-full bg-white dark:bg-black">
       <Meta
         socialMedia={socialMedia}
         siteString={{
@@ -73,30 +68,29 @@ const PostPage: React.FC<Props> = ({
       />
 
       <BlogNav />
-      <div className="dark:bg-gray-800 bg-gray-100 m-auto pt-40">
-        <div className="lg:max-w-screen-lg flex justify-start items-end max-w-sm mx-auto">
-          <div>
-            <Text isTitle className="mb-2" bold="extrabold" size="4xl">
+      <main className="mx-auto w-full max-w-screen-lg px-4 pb-14 pt-24 lg:px-0">
+        <TerminalPanel className="border-black bg-white dark:border-white dark:bg-black">
+          <div className="mb-8 border-b border-black pb-6 dark:border-white">
+            <p className="font-mono text-xs uppercase tracking-wider text-black dark:text-white">
+              Written on {publishedDate}
+            </p>
+            <h1 className="mt-2 text-3xl font-semibold leading-tight text-black dark:text-white md:text-4xl">
               {frontMatter?.title}
-            </Text>
-            <Text
-              size="xl"
-              className="text-gray-500 block mb-6  dark:text-gray-400"
-            >
-              Written on {format(new Date(frontMatter?.date), "MMM do yyyy")}
-            </Text>
+            </h1>
+            <p className="mt-3 text-sm text-black dark:text-white md:text-base">
+              {frontMatter?.description}
+            </p>
           </div>
-        </div>
-      </div>
-      <div className="lg:max-w-screen-lg max-w-sm mx-auto pb-10">
-        <article className="prose text-lg prose-blue mt-10">
-          <div className="  blog  dark:border-gray-900">
-            <MDXRemote components={components} {...source} />
-          </div>
-        </article>
-      </div>
+
+          <article className="prose prose-zinc max-w-none text-base leading-8 dark:prose-invert">
+            <div className="blog">
+              <MDXRemote components={components} {...source} />
+            </div>
+          </article>
+        </TerminalPanel>
+      </main>
       <Footer socialMedia={socialMedia} footer={footer} smaller />
-    </>
+    </div>
   );
 };
 
