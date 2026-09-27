@@ -5,7 +5,11 @@ module.exports = {
     extend: {
       blur: {
         xs: '2px',
-      }
+      },
+      fontFamily: {
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['"JetBrains Mono"', '"Fira Code"', 'Menlo', 'Monaco', 'monospace'],
+      },
     },
   },
   variants: {

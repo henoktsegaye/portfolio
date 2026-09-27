@@ -1,129 +1,109 @@
-// pages/index.tsx
 import { useMemo, useState } from "react";
-import { IPost } from "../types/post";
-import { getAllPosts } from "../lib/mdxUtils";
-import LanguageStrings, { langType } from "../lib/lang";
-import { AnimatePresence } from "framer-motion";
-import { BlogHeader } from "../components/blog/blogHeader";
-import { BlogCard } from "../components/blog/BlogCard";
-import { BlogNav } from "../components/blog/blogNav";
-import { Text } from "../components/basic/genial/text";
-import { TerminalPanel } from "../components/basic/ui";
-import Footer from "../components/layout/footer";
-import Meta from "../components/layout/meta";
+import { IPostSummary } from "../types/post";
+import { getAllPostSummaries } from "../lib/posts";
+import SiteLayout, { useOpenSearch } from "../components/site/SiteLayout";
+import { usePosts } from "../hooks/usePosts";
+import PostRow from "../components/site/PostRow";
 
 type Props = {
-  files: {
-    posts: IPost[];
-    works: IPost[];
-  };
-  localeString: langType;
-  locale: "am" | "en";
+  posts: IPostSummary[];
 };
 
-const Home: React.FC<Props> = ({ files, localeString, locale }) => {
-  const { posts } = files;
-  const { footer, general, socialMedia } = localeString;
-  const normalizeTag = (value?: string) => (value ?? "").trim();
-  const splitTags = (value?: string) =>
-    normalizeTag(value)
-      .split(",")
-      .map((tag) => tag.trim())
-      .filter(Boolean);
+const HomeList: React.FC = () => {
+  const posts = usePosts();
+  const openSearch = useOpenSearch();
 
-  const tags = useMemo(
-    () =>
-      new Set(
-        posts
-          .flatMap((el) => splitTags(el.hashtag))
-          .filter(Boolean)
-          .sort((tagA, tagB) => tagA.localeCompare(tagB))
-      ),
+  const categories = useMemo(
+    () => Array.from(new Set(posts.map((post) => post.category))).sort(),
     [posts]
   );
-  const tagsList = useMemo(() => Array.from(tags), [tags]);
-
-  const [activeTag, setActiveTag] = useState<string | null>(null);
-  const [search, setSearch] = useState<string>("");
-
-  const selectedPostsByTag = useMemo(
-    () =>
-      activeTag
-        ? posts.filter((el) => splitTags(el.hashtag).includes(activeTag))
-        : posts,
-    [activeTag, posts]
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [expandedSlug, setExpandedSlug] = useState<string | null>(
+    posts[0]?.slug ?? null
   );
-  const selectedPosts = useMemo(
-    () =>
-      search
-        ? selectedPostsByTag.filter((el) =>
-            el.title.toLowerCase().includes(search.toLowerCase())
-          )
-        : selectedPostsByTag,
-    [selectedPostsByTag, search]
-  );
+
+  const filteredPosts = activeCategory
+    ? posts.filter((post) => post.category === activeCategory)
+    : posts;
+
+  const selectCategory = (category: string | null) => {
+    setActiveCategory(category);
+    const nextPosts = category
+      ? posts.filter((post) => post.category === category)
+      : posts;
+    setExpandedSlug(nextPosts[0]?.slug ?? null);
+  };
 
   return (
-    <div className="min-h-screen w-full bg-white dark:bg-black">
-      <Meta
-        socialMedia={socialMedia}
-        siteString={{
-          siteTitle: general.siteTitle,
-          siteDescription: general.siteDescription,
-        }}
-        title="homepage"
-      />
-      <BlogNav />
-      <main className="mx-auto w-full max-w-screen-lg px-4 pb-14 pt-24 lg:px-0">
-        <TerminalPanel>
-          <div className="mb-4 flex justify-end">
-            <p className="font-mono text-xs uppercase tracking-wider text-black dark:text-white">
-              {selectedPosts.length} posts
-            </p>
-          </div>
-          <BlogHeader
-            tags={["All", ...tagsList]}
-            search={search}
-            onSearchChange={setSearch}
-            activeTag={activeTag ?? "All"}
-            onTagChange={(tag: string) => setActiveTag(tag !== "All" ? tag : null)}
+    <>
+      <p className="mb-6 max-w-[46ch] text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        Notes on software, and the occasional detour into life and the things I do outside of it.
+      </p>
+
+      <div className="mb-8 flex items-center justify-between gap-4">
+        <div className="flex gap-4 font-mono text-xs tracking-wider">
+          <button
+            onClick={() => selectCategory(null)}
+            className={
+              activeCategory === null
+                ? "border-b border-black text-black dark:border-white dark:text-white"
+                : "text-gray-600 hover:text-black dark:text-gray-400 dark:hover:text-white"
+            }
+          >
+            All
+          </button>
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => selectCategory(category)}
+              className={
+                activeCategory === category
+                  ? "border-b border-black text-black dark:border-white dark:text-white"
+                  : "text-gray-600 hover:text-black dark:text-gray-400 dark:hover:text-white"
+              }
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+        <button
+          onClick={openSearch}
+          className="flex items-center gap-1.5 font-mono text-xs tracking-wider text-gray-600 hover:text-black dark:text-gray-400 dark:hover:text-white"
+        >
+          <span>Search</span>
+          <span className="rounded border border-gray-300 px-1 text-[10px] dark:border-gray-700">
+            ⌘K
+          </span>
+        </button>
+      </div>
+
+      <div>
+        {filteredPosts.length === 0 && (
+          <p className="text-sm text-gray-600 dark:text-gray-400">No posts here yet.</p>
+        )}
+        {filteredPosts.map((post) => (
+          <PostRow
+            key={post.slug}
+            post={post}
+            expanded={post.slug === expandedSlug}
+            onToggle={() =>
+              setExpandedSlug(expandedSlug === post.slug ? null : post.slug)
+            }
           />
-          <div className="grid grid-cols-1 gap-3">
-            <AnimatePresence>
-              {selectedPosts.length === 0 && (
-                <Text size="xl" className="text-black dark:text-white">
-                  No results found.
-                </Text>
-              )}
-              {selectedPosts.map((el) => (
-                <BlogCard key={el.slug} blog={el} />
-              ))}
-            </AnimatePresence>
-          </div>
-        </TerminalPanel>
-      </main>
-      <Footer footer={footer} socialMedia={socialMedia} />
-    </div>
+        ))}
+      </div>
+    </>
   );
 };
+
+const Home: React.FC<Props> = ({ posts }) => (
+  <SiteLayout posts={posts} title="Home">
+    <HomeList />
+  </SiteLayout>
+);
 
 export default Home;
 
-export const getStaticProps = async ({
-  locale = "en",
-}: {
-  locale: "am" | "en";
-}) => {
-  const files = getAllPosts([
-    "slug",
-    "date",
-    "thumbnail",
-    "title",
-    "description",
-    "hashtag",
-  ]);
-
-  const localeString: langType = LanguageStrings[locale];
-
-  return { props: { files, localeString, locale } };
+export const getStaticProps = async () => {
+  return { props: { posts: getAllPostSummaries() } };
 };

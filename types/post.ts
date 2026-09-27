@@ -1,7 +1,7 @@
 export interface IPost {
   slug: string;
   date: string;
-  hashtag: string;
+  category: string;
   thumbnail: string;
   title: string;
   description: string;
@@ -11,12 +11,12 @@ export interface IPost {
   tech?: string[];
 }
 
-export type Blog = {
+// Lightweight shape used anywhere a list of posts is shown or searched:
+// the home list, the spotlight search index, and prev/next navigation.
+export interface IPostSummary {
   slug: string;
   date: string;
-  hashtag: string;
-  thumbnail: string;
   title: string;
   description: string;
-  author: string;
+  category: string;
 }
