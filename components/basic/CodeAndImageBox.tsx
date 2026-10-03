@@ -1,47 +1,18 @@
-import { FC, useState, useEffect } from "react";
-import Lightbox from "react-image-lightbox";
 import { Code } from "./code";
 import ImageBox from "./imageBox";
 
 type Props = {
-    url: string;
-    alt?: string;
-    limit?: boolean;
-    code: string
+  url: string;
+  alt?: string;
+  limit?: boolean;
+  code: string;
 };
 
-const CodeAndImageBox = ({ url, alt, limit = true, code }: Props) => {
-    const [dark, setDark] = useState<boolean>(false);
-    const getTheme = () => {
-        const theme = localStorage.getItem("theme") ? localStorage.getItem("theme") : "dark";
-        if (theme == "dark") {
-            setDark(true);
-        } else {
-            setDark(false);
-        }
-    }
+const CodeAndImageBox = ({ url, alt, limit = true, code }: Props) => (
+  <div className="my-8 grid items-center gap-6 sm:grid-cols-2">
+    <Code>{code}</Code>
+    <ImageBox url={url} alt={alt} limit={limit} noPopup />
+  </div>
+);
 
-    useEffect(() => {
-        window.addEventListener('storage', () => {
-            getTheme()
-        });
-        getTheme()
-    }, [])
-    return (
-        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', position: 'relative' }} >
-            <div style={{
-                width: '40%',
-            }}>
-                <Code className="" dark={!dark} children={code} />
-            </div>
-            <img
-                alt={alt}
-                src={url}
-                className={` my-6 ${limit ? "max-h-96" : ""
-                    } w-auto`}
-
-            />
-        </div>
-    )
-}
-export default CodeAndImageBox
+export default CodeAndImageBox;

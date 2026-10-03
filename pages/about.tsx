@@ -1,49 +1,47 @@
 import { IPostSummary } from "../types/post";
 import { getAllPostSummaries } from "../lib/posts";
 import SiteLayout from "../components/site/SiteLayout";
+import Desk from "../components/about/Desk";
+import Shelf from "../components/about/Shelf";
 
 type Props = {
   posts: IPostSummary[];
 };
 
-const interests = [
-  "Building small tools and side projects",
-  "Reading books",
-  "Trying to experiment with music",
-  "Coffee, correctly made",
-];
+// A paragraph of the intro, kept to a readable line length.
+const Row: React.FC<{ first?: boolean; children: React.ReactNode }> = ({ first = false, children }) => (
+  <p className={`${first ? "mt-8" : "mt-7"} text-xl text-copy`} style={{ maxWidth: 700, lineHeight: 1.75 }}>
+    {children}
+  </p>
+);
 
-const About: React.FC<Props> = ({ posts }) => {
-  return (
-    <SiteLayout posts={posts} title="About" description="A bit about Henok Tsegaye.">
-      <div className="mb-10">
-        <h1 className="mb-2 text-xl font-bold text-black dark:text-white">
-          Henok Tsegaye
-        </h1>
-        <p className="max-w-[52ch] text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-          I&apos;m a software engineer who spends most days deep in code, and the
-          rest figuring out what else is worth doing with the time. This is
-          where I write about both.
-        </p>
-      </div>
+const About: React.FC<Props> = ({ posts }) => (
+  <SiteLayout posts={posts} title="About" description="A bit about Henok Tsegaye." width="wide">
+    <h1 className="text-display font-bold tracking-tight" style={{ lineHeight: 1.15, letterSpacing: "-0.03em" }}>
+      Hi, I&apos;m Henok.
+    </h1>
 
-      <p className="mb-4  text-gray-600 dark:text-gray-400">
-        Things I like
-      </p>
-      <ul className="flex flex-col ml-0 gap-3">
-        {interests.map((interest) => (
-          <li
-            key={interest}
-            className="flex pl-0 ml-0 gap-2.5 text-sm text-gray-700 dark:text-gray-300"
-          >
-            <span className="text-gray-600 dark:text-gray-400">→</span>
-            {interest}
-          </li>
-        ))}
-      </ul>
-    </SiteLayout>
-  );
-};
+    <Row first>
+      I&apos;m a full-stack engineer.
+    </Row>
+    <Row>
+      Away from the screen I read about human behaviour, meaning and productivity. I love to try out music and experiment
+      with it. I care more than is reasonable about coffee, and I like growing things: plants
+      now, maybe a farm one day.
+    </Row>
+    <Row>
+      This site is where I write about both: the code, and the rest. If something here was
+      useful, or wrong,{" "}
+      <a href="mailto:maxhenock@gmail.com" className="text-accent underline" style={{ textUnderlineOffset: 3 }}>
+        tell me
+      </a>
+      .
+    </Row>
+
+    <Desk />
+    <Shelf />
+  </SiteLayout>
+);
 
 export default About;
 

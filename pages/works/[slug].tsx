@@ -92,7 +92,7 @@ const WorksPage: React.FC<Props> = ({
           </span>
 
           <div className="text-lg blog ">
-            <MDXRemote {...source} components={{ ImageBox }} />
+            <MDXRemote {...source} components={{ ImageBox } as unknown as Record<string, React.ReactNode>} />
           </div>
         </article>
       </div>

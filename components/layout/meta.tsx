@@ -33,6 +33,12 @@ const Meta: React.FC<Props> = ({
   return (
     <Head>
       <meta charSet="utf-8" />
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      />
       <title>{`${title} | ${siteTitle} `}</title>
       <link
         rel="apple-touch-icon"

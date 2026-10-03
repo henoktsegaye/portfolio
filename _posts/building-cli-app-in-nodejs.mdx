@@ -1,30 +1,34 @@
 ---
 date: "2023-05-15"
 thumbnail: /assets/blog/cli-cover.png
-title: Building a Cli app with Node.js
+title: Building a CLI app with Node.js
 description: Cli app is a great way for developers and technical people to interact with your application. In this article, we will learn how to build a cli app with Node.js
-category: "Tech"
+category: "Node.js"
 author: Henok Tsegaye
 ---
 In this blog we are going to build a simple Cli app that lists files in a directory and shows the content of a file in that directory. We will use Node.js to build this app. 
 The aim of this blog is to show how we can intract with the console and output the result to the console.
 
-### Prerequisites
+## Prerequisites
 - Node.js
 - npm or pnpm ( I am using pnpm in this blog)
 - git
 
-### Getting started
+## Setting up the project
+
+### Clone the starter
 
 To help us get started faster we are going to clone a starter project from Github that supports typescript and eslint.
 ```bash
 git clone git@github.com:henoktsegaye/node-ts-starter.git
 ```
 
-### Installing dependencies
+### Install dependencies
 ```bash
 pnpm install
 ```
+## Reading arguments with `process.argv`
+
 When running node on the terminal, anything passed while executing the file could be accessed from the `process.argv` array. The first element of the array is the path to the node executable while the second element is the path to the file that is being executed, the rest of the elements in the array are the arguments passed to the file. 
 For example, if we run the following command on the terminal.
 ```bash
@@ -45,11 +49,15 @@ if (process.argv.includes('--version')) {
 }
 ```
 
-### Using npm packages
+## Using npm packages
+### Why not parse by hand?
+
 Using the `process.argv` array to parse the arguments passed to the file could be a bit slow and tedious and error prone if we have a lot of arguments to parse.
 ![Slow process](https://media.giphy.com/media/OocLVILtd7ybm/giphy.gif)
 There are a couple of great npm packages that could actually help us write this cli app faster but we could choose not to use those packages and write our own parser instead.
  In this blog we are going to use some of this packages anyway to help us write this app faster.
+
+### The packages we'll use
 
 Here are a couple of packages that we are going to use in this blog
 
@@ -62,10 +70,12 @@ Once we have installed dependencies from the starter project , we can start to i
 pnpm install commander chalk inquirer
 ```
 
-### Building the app
+## Building the app
 
 A CLI app is different in the way that the user interacts with the app, there is no UI or nice interface the user could click around. Instead users have to type commands to do everything , to even get help. `Commander.js` could actually help us on this. Commander handles parsing input from the command line that the user types and helps us to define custom commands and options for our app.
 Let's see this in action.
+### Create the program
+
 First let's start by creating a program from commander
 ```ts
 import { Command } from 'commander';
@@ -83,6 +93,8 @@ version('0.0.1').
 description('A simple cli app that lists and shows the content of a directory');
 
 ```
+### Parse and run it
+
 Now that we have the basics we can call `parse` method on the program instance to parse the input from the command line and pass `process.argv`.
 ```ts
 program.parse(process.argv);
@@ -93,6 +105,8 @@ pnpm run dev --version
 
 # output 0.0.1
 ```
+### Add a `--list` option
+
 Now let's define an option that lists the content of a directory. we can do that by calling the `option` method on the program object.
 ```ts
 program.
@@ -103,6 +117,8 @@ option('-s, --show <path>', 'show the content of a file').
 parse(process.argv);
 
 ```
+### List the files in a directory
+
 Now that we have defined the options for the CLI app, we can start to implement the logic for each option. 
 ```ts
 import fs from 'fs';
@@ -157,6 +173,8 @@ pnpm run dev --list
 pnpm run dev --show README.md
 
 ```
+### Make it interactive with inquirer
+
 Pretty neat right? its easy as that!
 But Wait there is more.
 Now that we have the basics. we want to add a prompt on the `--list` option to ask the user to select a directory / file to show the content of the directory / file.
@@ -220,7 +238,7 @@ You should see something like this
 
 Now you can navigate through the directories and select a file to view the content.
 
-### Conclusion
+## Wrapping up
 
 In this blog we have learned how to build a simple CLI app with Node.js. We have learned how to use commander to define commands and options for our app. We have also learned how to use chalk to style the output to the console and inquirer to build interactive command line interface.
 you can find the source code for this blog [here](https://github.com/henoktsegaye/file-viewer)

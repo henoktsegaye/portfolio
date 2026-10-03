@@ -10,19 +10,15 @@ type Props = {
 const NotFound: React.FC<Props> = ({ posts }) => {
   return (
     <SiteLayout posts={posts} title="Page not found">
-      <div className="py-16 text-center">
-        <h1 className="mb-3 text-2xl font-bold text-black dark:text-white">
-          Page not found
-        </h1>
-        <p className="mb-6 text-sm text-gray-700 dark:text-gray-300">
-          The page you&apos;re looking for doesn&apos;t exist.
-        </p>
-        <Link href="/">
-          <a className="font-mono text-xs tracking-wider text-black underline dark:text-white">
-            Go home
-          </a>
-        </Link>
-      </div>
+      <h1 className="text-display font-bold tracking-tight" style={{ lineHeight: 1.15, letterSpacing: "-0.03em" }}>
+        Page not found
+      </h1>
+      <p className="mt-6 text-lg text-sub">The page you&apos;re looking for doesn&apos;t exist.</p>
+      <Link href="/">
+        <a className="mt-4 inline-block text-lg text-accent underline" style={{ textUnderlineOffset: 3 }}>
+          Go home
+        </a>
+      </Link>
     </SiteLayout>
   );
 };

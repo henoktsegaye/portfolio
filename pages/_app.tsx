@@ -4,7 +4,6 @@ import "../styles/globals.css";
 import "tailwindcss/tailwind.css";
 import "nprogress/nprogress.css";
 import type { AppProps } from "next/app";
-import { ThemeProvider } from "../hooks/useTheme";
 
 NProgress.configure({
   minimum: 0.3,
@@ -18,11 +17,6 @@ Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return (
-    <ThemeProvider>
-      {" "}
-      <Component {...pageProps} />{" "}
-    </ThemeProvider>
-  );
+  return <Component {...pageProps} />;
 }
 export default MyApp;

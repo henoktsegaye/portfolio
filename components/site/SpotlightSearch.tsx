@@ -1,11 +1,36 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { usePosts } from "../../hooks/usePosts";
-import CategoryTag from "./CategoryTag";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+};
+
+const MAX_RESULTS = 8;
+
+const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const Highlight: React.FC<{ text: string; query: string }> = ({ text, query }) => {
+  const q = query.trim();
+  if (!q) return <>{text}</>;
+  const parts = text.split(new RegExp(`(${escapeRegExp(q)})`, "ig"));
+  return (
+    <>
+      {parts.map((part, i) =>
+        part.toLowerCase() === q.toLowerCase() ? (
+          <mark
+            key={i}
+            className="rounded-sm bg-callout text-accent"
+          >
+            {part}
+          </mark>
+        ) : (
+          <span key={i}>{part}</span>
+        )
+      )}
+    </>
+  );
 };
 
 const SpotlightSearch: React.FC<Props> = ({ isOpen, onClose }) => {
@@ -13,20 +38,25 @@ const SpotlightSearch: React.FC<Props> = ({ isOpen, onClose }) => {
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const router = useRouter();
 
-  const results = useMemo(() => {
+  const showTags = useMemo(
+    () => new Set(posts.map((post) => post.category)).size > 1,
+    [posts]
+  );
+
+  const matches = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return posts.slice(0, 8);
-    return posts
-      .filter(
-        (post) =>
-          post.title.toLowerCase().includes(q) ||
-          post.description.toLowerCase().includes(q) ||
-          post.category.toLowerCase().includes(q)
-      )
-      .slice(0, 8);
+    if (!q) return posts;
+    return posts.filter(
+      (post) =>
+        post.title.toLowerCase().includes(q) ||
+        post.description.toLowerCase().includes(q) ||
+        post.category.toLowerCase().includes(q)
+    );
   }, [query, posts]);
+  const results = matches.slice(0, MAX_RESULTS);
 
   useEffect(() => {
     if (isOpen) {
@@ -45,6 +75,10 @@ const SpotlightSearch: React.FC<Props> = ({ isOpen, onClose }) => {
   useEffect(() => {
     setActiveIndex(0);
   }, [query]);
+
+  useEffect(() => {
+    itemRefs.current[activeIndex]?.scrollIntoView({ block: "nearest" });
+  }, [activeIndex]);
 
   const goToResult = (slug: string) => {
     router.push(`/blog/${slug}`);
@@ -76,11 +110,14 @@ const SpotlightSearch: React.FC<Props> = ({ isOpen, onClose }) => {
       onClick={onClose}
     >
       <div
-        className="w-full max-w-lg overflow-hidden rounded-lg border border-gray-200 bg-white shadow-2xl dark:border-gray-800 dark:bg-black"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Search posts"
+        className="w-full max-w-xl overflow-hidden rounded-2xl border border-rule bg-page shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center gap-2 border-b border-gray-200 px-4 py-3 dark:border-gray-800">
-          <span className="text-gray-400">⌘</span>
+        <div className="flex items-center gap-3 border-b border-rule px-4 py-3">
+          <span className="text-mute">⌘</span>
           <input
             ref={inputRef}
             value={query}
@@ -88,41 +125,54 @@ const SpotlightSearch: React.FC<Props> = ({ isOpen, onClose }) => {
             onKeyDown={handleKeyDown}
             type="text"
             placeholder="Search posts..."
-            className="w-full bg-transparent text-sm text-black outline-none placeholder:text-gray-400 dark:text-white"
+            aria-label="Search posts"
+            className="w-full bg-transparent text-base text-ink outline-none placeholder:text-mute"
           />
-          <span className="hidden rounded border border-gray-300 px-1 font-mono text-[10px] text-gray-400 dark:border-gray-700 sm:inline">
+          <span className="hidden rounded bg-field px-1.5 font-mono text-xs text-sub sm:inline">
             Esc
           </span>
         </div>
-        <div className="max-h-80 overflow-y-auto py-2">
+
+        <div role="listbox" className="max-h-96 overflow-y-auto py-1">
           {results.length === 0 && (
-            <p className="px-4 py-6 text-center text-sm text-gray-600 dark:text-gray-400">
-              No posts found.
+            <p className="px-4 py-8 text-center text-base text-sub">
+              No posts match &ldquo;{query.trim()}&rdquo;.
             </p>
           )}
           {results.map((post, index) => (
             <button
               key={post.slug}
+              ref={(el) => {
+                itemRefs.current[index] = el;
+              }}
               type="button"
+              role="option"
+              aria-selected={index === activeIndex}
               onClick={() => goToResult(post.slug)}
               onMouseEnter={() => setActiveIndex(index)}
-              className={`block w-full px-4 py-2.5 text-left ${
+              className={`block w-full border-l-2 px-4 py-2.5 text-left ${
                 index === activeIndex
-                  ? "bg-gray-100 dark:bg-gray-800"
-                  : ""
+                  ? "border-accent bg-field"
+                  : "border-transparent"
               }`}
             >
-              <p className="text-sm font-medium text-black dark:text-white">
-                {post.title}
-              </p>
-              <p className="mt-0.5 line-clamp-1 text-xs text-gray-700 dark:text-gray-300">
-                {post.description}
-              </p>
-              <div className="mt-1.5">
-                <CategoryTag category={post.category} />
-              </div>
+              <span className="flex items-center justify-between gap-3">
+                <span className="truncate text-base font-medium text-ink">
+                  <Highlight text={post.title} query={query} />
+                </span>
+                {showTags && <span className="flex-shrink-0 text-sm font-medium text-accent">{post.category}</span>}
+              </span>
+              <span className="mt-0.5 block truncate text-sm text-sub">
+                <Highlight text={post.description} query={query} />
+              </span>
             </button>
           ))}
+        </div>
+
+        <div className="border-t border-rule px-4 py-2 text-sm text-mute">
+          {query.trim()
+            ? `${matches.length} ${matches.length === 1 ? "result" : "results"}`
+            : `${posts.length} ${posts.length === 1 ? "post" : "posts"}`}
         </div>
       </div>
     </div>

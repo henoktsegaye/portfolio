@@ -1,9 +1,9 @@
 ---
 date: "2022-10-09"
 thumbnail: /assets/blog/ErrorHandling.png
-title: Handling Errors in express Typescript 
+title: Handling Errors in Express TypeScript
 description: Errors are common and un-avoidable but we are going to learn Handling Operational Errors in Express using Typescript using custom error classes
-category: "Tech"
+category: "TypeScript"
 author: Henok Tsegaye
 ---
 
@@ -13,13 +13,15 @@ In this blog I will show how you can **handle error gracefully** in **express**.
 Express is one of the most famous *Node.js Frameworks*.
 
 
+## Two kinds of errors
+
 Errors can be divided into two categories in Node.js:
 1. Operational errors (e.g. database connection error, invalid user input, etc.)
 2. Programming errors (e.g. syntax error, reference error, etc.)
 
 
 
-### Handling Programming Errors
+## Handling programming errors
 
 Programming errors are usually not handled in Node.js. When they occur Node.js process is terminated. This is because programming errors are usually not recoverable and the process should be terminated to avoid further damage.
 but we can listen to `unhandledRejection` and `uncaughtException` events to handle programming errors. But it is recommend to just let the process crash and restart it using a process manager like [pm2](https://www.npmjs.com/package/pm2)
@@ -41,7 +43,9 @@ process.on('unhandledRejection', (err) => {
 });
 ```
 
-### Handling Operational Errors
+## Handling operational errors
+
+### How middleware works
 
 Express works with the **concept of middleware**. Middleware is a function that has access to the request and response object. 
 
@@ -55,7 +59,7 @@ _we also handle error in express using middleware._
 
 let's learn all this by creating a simple express app.
 
-#### Create a simple express app
+### Create the Express app
 
 First, we need to create a new directory and initialize a new node project.
 
@@ -94,6 +98,8 @@ app.listen(3000, () => {
 })
 ```
 
+
+### Create error classes
 
 now that we have a simple express app, let's add some error handling to it. We are going to create a new file called `error.ts` and add the following code.
 
@@ -145,6 +151,8 @@ class ValidationError extends BaseError {
 }
 ```
 we can create as many error classes as we want. In this example I have created two error classes. The first one is the `NotFoundError` class and the second one is the `ValidationError` class.
+### Write the error handler
+
 next we need to create a middleware that will handle the errors.
 **Error Handler Middleware** is a middleware that takes four arguments. 
 The first argument is the error object, the second argument is the request object, the third argument is the response object and the fourth argument is the next function.
@@ -184,6 +192,8 @@ const errorHandler = (err: Error, req: Request, res: Response, next: NextFunctio
 export {  errorHandler }
 ```
 
+### Wire it into the app
+
 now that we have created the error handler middleware, we need to add it to our express app. We can do this by adding the middleware using `app.use` method.
 let's add the following code to our `index.ts` file.
 
@@ -191,6 +201,8 @@ let's add the following code to our `index.ts` file.
 ```typescript
 app.use(errorHandler)
 ```
+### Throw errors from a route
+
 now we can use our error classes in our controllers and/or middleware to throw errors.
 let's add a new route to our `index.ts` file.
 
@@ -218,6 +230,8 @@ app.get('/users/:id', validateId, (req, res) => {
     }
 })
 ```
+
+### Try it out
 
 now we can test our app by running the following command.
 
@@ -247,6 +261,8 @@ and When we hit the route `/users/unknown` we will get the following response.
     ]
 }
 ```
+
+## Wrapping up
 
 and We have successfully created a simple express app with error handling.
 
